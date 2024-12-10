@@ -1,5 +1,5 @@
-from gui.main_window import MainWindow  # Import MainWindow class
-import tkinter as tk  # Import Tkinter for creating the root window
+import tkinter as tk
+from gui.main_window import MainWindow
 
 def main():
     """
