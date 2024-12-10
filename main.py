@@ -11,4 +11,4 @@ def main():
     root.mainloop()  # Start the Tkinter event loop
 
 if __name__ == "__main__":
-    main()
+    main()1
