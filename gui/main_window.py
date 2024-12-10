@@ -4,16 +4,14 @@ import cv2
 from PIL import Image, ImageTk  # For displaying images
 from tkinter import ttk
 import tkinter as tk
+from threading import Thread  # To handle video playback without freezing the GUI
 from Services.file_loader import FileLoader
 from Services.media_handler import MediaHandler
-from threading import Thread  # To handle video playback without freezing the GUI
+from gui.components import ImageViewer, VideoPlayer
 
 
 class MainWindow:
     def __init__(self, root):
-        """
-        MainWindow constructor that sets up the main application layout.
-        """
         self.root = root
         self.root.title("Media Display App")
 
@@ -21,31 +19,22 @@ class MainWindow:
         self.file_loader = FileLoader()
         self.media_handler = MediaHandler()
 
-        # Variables for image and video handling
-        self.image_label_widget = None
-        self.video_label_widget = None
+        # Variables for video playback
         self.video_thread = None
         self.stop_video_flag = False
         self.pause_video_flag = False
+        self.current_video_path = None
 
-        # Last loaded markers
-        self.markers = []
-
-        # Load persistent data
+        # Persistent data
         self.config_file = "config.json"
         self.last_opened_files = self.load_last_opened_files()
 
-        # Create frames for widgets
-        self.image_frame = ttk.Frame(self.root, style="Debug.TFrame")
-        self.video_frame = ttk.Frame(self.root, style="Debug.TFrame")
-        self.text_frame = ttk.Frame(self.root, style="Debug.TFrame")  # Frame for file name and markers grid
-        self.controls_frame = ttk.Frame(self.root, style="Debug.TFrame")
+        # Create frames
+        self.image_frame = ttk.Frame(self.root)
+        self.video_frame = ttk.Frame(self.root)
+        self.text_frame = ttk.Frame(self.root)
+        self.controls_frame = ttk.Frame(self.root)
 
-        # Debugging style for frames
-        style = ttk.Style()
-        style.configure("Debug.TFrame", background="lightblue", borderwidth=1, relief="solid")
-
-        # Place the frames using grid
         self.image_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
         self.video_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
         self.text_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
@@ -58,13 +47,31 @@ class MainWindow:
         self.root.grid_columnconfigure(1, weight=1)
 
         # Image and video labels
-        self.image_label_widget = ttk.Label(self.image_frame, text="1: No image loaded", anchor="center")
+        self.image_viewer = ImageViewer(self.image_frame)
+        self.image_label_widget = ttk.Label(self.image_frame, anchor="center")
         self.image_label_widget.pack(fill="both", expand=True)
 
-        self.video_label_widget = ttk.Label(self.video_frame, text="2: No video loaded", anchor="center")
+        # Add video controls
+        self.video_control_frame = ttk.Frame(self.video_frame)
+        self.video_control_frame.pack(fill="x", side="top", pady=5)
+
+        self.video_display_frame = ttk.Frame(self.video_frame)
+        self.video_display_frame.pack(fill="both", expand=True)
+
+        # Add controls to the video_control_frame
+        ttk.Label(self.video_control_frame, text="Video Player", font=("Arial", 12, "bold")).pack(side="left", padx=5)
+        self.play_button = ttk.Button(self.video_control_frame, text="Play", command=self.play_video_controls)
+        self.play_button.pack(side="left", padx=5)
+        self.pause_button = ttk.Button(self.video_control_frame, text="Pause", command=self.pause_video_controls)
+        self.pause_button.pack(side="left", padx=5)
+        self.stop_button = ttk.Button(self.video_control_frame, text="Stop", command=self.stop_video_controls)
+        self.stop_button.pack(side="left", padx=5)
+
+        # Add a label to display the video in the video_display_frame
+        self.video_label_widget = ttk.Label(self.video_display_frame, text="No video loaded", anchor="center")
         self.video_label_widget.pack(fill="both", expand=True)
 
-        # Text frame setup
+        # Add marker tree to text frame
         self.file_label = ttk.Label(self.text_frame, text="File: No file loaded", font=("Arial", 12, "bold"), anchor="w")
         self.file_label.pack(fill="x", padx=5, pady=5)
 
@@ -96,22 +103,15 @@ class MainWindow:
         self.marker_tree.column("Picture", width=100, anchor="center")
         self.marker_tree.column("Video", width=100, anchor="center")
 
-        ttk.Label(self.controls_frame, text="4", font=("Arial", 20), foreground="purple").pack(pady=10)
-
-        # Add action buttons to the controls_frame
+        # Controls frame buttons
         self.load_image_button = ttk.Button(self.controls_frame, text="Load Image", command=self.load_image)
         self.load_video_button = ttk.Button(self.controls_frame, text="Load Video", command=self.load_video)
         self.load_shotcut_button = ttk.Button(self.controls_frame, text="Load Shotcut File", command=self.load_shotcut)
         self.settings_button = ttk.Button(self.controls_frame, text="Settings", command=self.open_settings)
 
-        self.play_button = ttk.Button(self.controls_frame, text="Play", command=self.play_video_controls)
-        self.pause_button = ttk.Button(self.controls_frame, text="Pause", command=self.pause_video_controls)
-
         self.load_image_button.pack(pady=5)
         self.load_video_button.pack(pady=5)
         self.load_shotcut_button.pack(pady=5)
-        self.play_button.pack(pady=5)
-        self.pause_button.pack(pady=5)
         self.settings_button.pack(pady=5)
 
         # Auto-load markers from the last opened shortcut file
@@ -119,35 +119,51 @@ class MainWindow:
 
     def load_image(self):
         file_path = self.file_loader.load_image(initialdir=self.last_opened_files.get("image_folder", os.getcwd()))
-        if file_path:
-            self.last_opened_files["image"] = file_path
-            self.last_opened_files["image_folder"] = os.path.dirname(file_path)
-            self.save_last_opened_files()
-            self.update_labels()
-            self.display_image(file_path)
+        if not file_path:
+            return
+        self.last_opened_files["image"] = file_path
+        self.last_opened_files["image_folder"] = os.path.dirname(file_path)
+        self.save_last_opened_files()
 
-    def display_image(self, file_path):
+        # Display image directly in image_label_widget
         image = Image.open(file_path)
-        image = image.resize((self.image_frame.winfo_width(), self.image_frame.winfo_height()), Image.ANTIALIAS)
+        image = image.resize((self.image_frame.winfo_width(), self.image_frame.winfo_height()), Image.Resampling.LANCZOS)
         photo = ImageTk.PhotoImage(image)
         self.image_label_widget.config(image=photo, text="")
         self.image_label_widget.image = photo
 
+
     def load_video(self):
         file_path = self.file_loader.load_video(initialdir=self.last_opened_files.get("video_folder", os.getcwd()))
-        if file_path:
-            self.last_opened_files["video"] = file_path
-            self.last_opened_files["video_folder"] = os.path.dirname(file_path)
-            self.save_last_opened_files()
-            self.update_labels()
+        if not file_path:
+            return
+        self.last_opened_files["video"] = file_path
+        self.last_opened_files["video_folder"] = os.path.dirname(file_path)
+        self.save_last_opened_files()
+        self.current_video_path = file_path
+        self.video_label_widget.config(text="Video loaded, ready to play")
 
     def play_video_controls(self):
-        if self.last_opened_files.get("video"):
-            self.pause_video_flag = False
-            self.play_video(self.last_opened_files["video"])
+        if not self.current_video_path:
+            self.video_label_widget.config(text="No video loaded.")
+            return
+        self.pause_video_flag = False
+        self.play_video(self.current_video_path)
 
     def pause_video_controls(self):
         self.pause_video_flag = True
+
+    def stop_video_controls(self):
+        self.stop_video_flag = True
+        if self.video_thread and self.video_thread.is_alive():
+            self.root.after(100, self.check_video_thread)
+        self.video_label_widget.config(image="", text="No video loaded")
+        
+    def check_video_thread(self):
+        if self.video_thread and self.video_thread.is_alive():
+            self.root.after(100, self.check_video_thread)  # Keep checking every 100ms
+        else:
+            self.video_thread = None  # Reset the thread once it has stopped
 
     def play_video(self, file_path):
         if self.video_thread and self.video_thread.is_alive():
@@ -180,20 +196,20 @@ class MainWindow:
 
     def load_shotcut(self):
         file_path = self.file_loader.load_shortcut(initialdir=self.last_opened_files.get("shortcut_folder", os.getcwd()))
-        if file_path and (file_path.endswith(".mlt") or file_path.endswith(".xml")):
-            self.last_opened_files["shortcut"] = file_path
-            self.last_opened_files["shortcut_folder"] = os.path.dirname(file_path)
-            self.save_last_opened_files()
-            self.update_labels()
-            self.file_label.config(text=f"File: {os.path.basename(file_path)}")
-            self.markers = self.media_handler.extract_markers_from_file(file_path)
-            self.display_markers()
+        if not file_path:
+            return
+        self.last_opened_files["shortcut"] = file_path
+        self.last_opened_files["shortcut_folder"] = os.path.dirname(file_path)
+        self.save_last_opened_files()
+        self.file_label.config(text=f"File: {os.path.basename(file_path)}")
+        self.markers = self.media_handler.extract_markers_from_file(file_path) or []
+        self.display_markers()
 
     def auto_load_markers(self):
         shortcut_file = self.last_opened_files.get("shortcut")
-        if shortcut_file and os.path.exists(shortcut_file) and (shortcut_file.endswith(".mlt") or shortcut_file.endswith(".xml")):
+        if shortcut_file and os.path.exists(shortcut_file):
             self.file_label.config(text=f"File: {os.path.basename(shortcut_file)}")
-            self.markers = self.media_handler.extract_markers_from_file(shortcut_file)
+            self.markers = self.media_handler.extract_markers_from_file(shortcut_file) or []
             self.display_markers()
 
     def display_markers(self):
@@ -210,11 +226,6 @@ class MainWindow:
         for key, file_path in self.last_opened_files.items():
             tk.Label(settings_window, text=f"{key.capitalize()}: {file_path or 'None'}", anchor="w").pack(fill="x", padx=20, pady=5)
         tk.Button(settings_window, text="Close", command=settings_window.destroy).pack(pady=20)
-
-    def update_labels(self):
-        self.image_label_widget.config(text=f"1: {os.path.basename(self.last_opened_files['image']) if self.last_opened_files['image'] else 'No image loaded'}")
-        self.video_label_widget.config(text=f"2: {os.path.basename(self.last_opened_files['video']) if self.last_opened_files['video'] else 'No video loaded'}")
-        self.file_label.config(text=f"File: {os.path.basename(self.last_opened_files['shortcut']) if self.last_opened_files['shortcut'] else 'No file loaded'}")
 
     def load_last_opened_files(self):
         if os.path.exists(self.config_file):
