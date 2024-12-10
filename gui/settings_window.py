@@ -1,38 +1,42 @@
 from tkinter import ttk
 import tkinter as tk
+import os
+from resources.styles import IMAGES_PATH
+
 
 class SettingsWindow:
-    """
-    SettingsWindow provides a menu for adjusting application settings, such as changing the background image or edge color.
-    """
-    def __init__(self, root, apply_settings_callback):
-        """
-        Initialize the settings window.
+    def __init__(self, parent, current_background_image, save_callback):
+        
+        self.parent = parent
+        self.current_background_image = current_background_image
+        self.save_callback = save_callback
 
-        Args:
-            root (Tk): The parent Tkinter root window.
-            apply_settings_callback (function): Callback function to apply changes (e.g., update the edge color).
-        """
-        self.root = tk.Toplevel(root)  # Create a new top-level window
-        self.root.title("Settings")
-        self.root.geometry("400x300")
+        self.window = tk.Toplevel(parent)
+        self.window.title("Settings")
+        self.window.geometry("400x300")
 
-        self.apply_settings_callback = apply_settings_callback
+        # Background image selection dropdown
+        tk.Label(self.window, text="Select Background Image:", font=("Arial", 12)).pack(pady=10)
+        self.image_var = tk.StringVar(value=self.current_background_image)
 
-        # Edge color adjustment
-        ttk.Label(self.root, text="Edge Color (Hex):").pack(pady=10)
-        self.edge_color_entry = ttk.Entry(self.root)
-        self.edge_color_entry.insert(0, "#000000")  # Default to black
-        self.edge_color_entry.pack(pady=10)
+        # Populate dropdown menu with available images
+        self.image_options = self.get_available_images()
+        print("Available images:", self.image_options)  # Debugging
+        self.image_dropdown = ttk.Combobox(self.window, textvariable=self.image_var, values=self.image_options, state="readonly")
+        self.image_dropdown.pack(pady=10)
 
-        # Apply button
-        self.apply_button = ttk.Button(self.root, text="Apply", command=self.apply_changes)
-        self.apply_button.pack(pady=10)
+        # Save button
+        ttk.Button(self.window, text="Save", command=self.save_settings).pack(pady=20)
 
-    def apply_changes(self):
-        """
-        Applies the selected settings (e.g., edge color).
-        """
-        new_edge_color = self.edge_color_entry.get()
-        self.apply_settings_callback(new_edge_color)
-        self.root.destroy()  # Close the settings window
+    def get_available_images(self):
+        """Get the list of available images in the resources/images directory."""
+        if os.path.exists(IMAGES_PATH):
+            return [f for f in os.listdir(IMAGES_PATH) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))]
+        return []
+
+    def save_settings(self):
+        selected_image = self.image_var.get()
+        if selected_image:  # Construct the full path using IMAGES_PATH
+            selected_image_path = os.path.join(IMAGES_PATH, selected_image)
+            self.save_callback(selected_image_path)
+        self.window.destroy()

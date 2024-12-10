@@ -8,12 +8,33 @@ from threading import Thread  # To handle video playback without freezing the GU
 from Services.file_loader import FileLoader
 from Services.media_handler import MediaHandler
 from gui.components import ImageViewer, VideoPlayer
+from resources.styles import BACKGROUND_COLOR
 
 
 class MainWindow:
     def __init__(self, root):
         self.root = root
         self.root.title("Media Display App")
+
+        # Persistent configuration
+        self.config_file = "config.json"
+        self.last_opened_files = self.load_last_opened_files()
+        self.background_image_path = self.last_opened_files.get("background_image", None)
+
+        # Set the root window background
+        self.background_label = ttk.Label(self.root)
+        self.background_label.place(relwidth=1, relheight=1)
+
+        # Load and set the background image
+        self.background_image = None  # To store the loaded background image
+        if self.background_image_path and os.path.exists(self.background_image_path):
+            self.set_background_image(self.background_image_path)
+        else:
+            self.root.configure(bg=BACKGROUND_COLOR)
+        
+        # Set window size based on the image
+        if self.background_image:
+            self.adjust_window_to_image()
 
         # Initialize file and media handlers
         self.file_loader = FileLoader()
@@ -25,15 +46,11 @@ class MainWindow:
         self.pause_video_flag = False
         self.current_video_path = None
 
-        # Persistent data
-        self.config_file = "config.json"
-        self.last_opened_files = self.load_last_opened_files()
-
         # Create frames
-        self.image_frame = ttk.Frame(self.root)
-        self.video_frame = ttk.Frame(self.root)
-        self.text_frame = ttk.Frame(self.root)
-        self.controls_frame = ttk.Frame(self.root)
+        self.image_frame = ttk.Frame(self.root, style="Blue.TFrame")
+        self.video_frame = ttk.Frame(self.root, style="Blue.TFrame")
+        self.text_frame = ttk.Frame(self.root, style="Blue.TFrame")
+        self.controls_frame = ttk.Frame(self.root, style="Blue.TFrame")
 
         self.image_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
         self.video_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
@@ -46,32 +63,35 @@ class MainWindow:
         self.root.grid_columnconfigure(0, weight=1)
         self.root.grid_columnconfigure(1, weight=1)
 
-        # Image and video labels
+        # Define styles
+        style = ttk.Style()
+        style.configure("Blue.TFrame", background=BACKGROUND_COLOR)
+        style.configure("Blue.TLabel", background=BACKGROUND_COLOR)
+        style.configure("Blue.TButton", background=BACKGROUND_COLOR)
+
+        # Image viewer
         self.image_viewer = ImageViewer(self.image_frame)
-        self.image_label_widget = ttk.Label(self.image_frame, anchor="center")
+        self.image_label_widget = ttk.Label(self.image_frame, anchor="center", style="Blue.TLabel")
         self.image_label_widget.pack(fill="both", expand=True)
 
-        # Add video controls
-        self.video_control_frame = ttk.Frame(self.video_frame)
+        # Video controls
+        self.video_control_frame = ttk.Frame(self.video_frame, style="Blue.TLabel")
         self.video_control_frame.pack(fill="x", side="top", pady=5)
 
         self.video_display_frame = ttk.Frame(self.video_frame)
         self.video_display_frame.pack(fill="both", expand=True)
 
-        # Add controls to the video_control_frame
-        ttk.Label(self.video_control_frame, text="Video Player", font=("Arial", 12, "bold")).pack(side="left", padx=5)
-        self.play_button = ttk.Button(self.video_control_frame, text="Play", command=self.play_video_controls)
+        self.play_button = ttk.Button(self.video_control_frame, text="Play", command=self.play_video_controls, style="Blue.TButton")
         self.play_button.pack(side="left", padx=5)
-        self.pause_button = ttk.Button(self.video_control_frame, text="Pause", command=self.pause_video_controls)
+        self.pause_button = ttk.Button(self.video_control_frame, text="Pause", command=self.pause_video_controls, style="Blue.TButton")
         self.pause_button.pack(side="left", padx=5)
-        self.stop_button = ttk.Button(self.video_control_frame, text="Stop", command=self.stop_video_controls)
+        self.stop_button = ttk.Button(self.video_control_frame, text="Stop", command=self.stop_video_controls, style="Blue.TButton")
         self.stop_button.pack(side="left", padx=5)
 
-        # Add a label to display the video in the video_display_frame
-        self.video_label_widget = ttk.Label(self.video_display_frame, text="No video loaded", anchor="center")
+        self.video_label_widget = ttk.Label(self.video_display_frame, text="No video loaded", anchor="center", style="Blue.TLabel")
         self.video_label_widget.pack(fill="both", expand=True)
 
-        # Add marker tree to text frame
+        # Marker tree
         self.file_label = ttk.Label(self.text_frame, text="File: No file loaded", font=("Arial", 12, "bold"), anchor="w")
         self.file_label.pack(fill="x", padx=5, pady=5)
 
@@ -103,7 +123,7 @@ class MainWindow:
         self.marker_tree.column("Picture", width=100, anchor="center")
         self.marker_tree.column("Video", width=100, anchor="center")
 
-        # Controls frame buttons
+        # Controls buttons
         self.load_image_button = ttk.Button(self.controls_frame, text="Load Image", command=self.load_image)
         self.load_video_button = ttk.Button(self.controls_frame, text="Load Video", command=self.load_video)
         self.load_shotcut_button = ttk.Button(self.controls_frame, text="Load Shotcut File", command=self.load_shotcut)
@@ -114,7 +134,7 @@ class MainWindow:
         self.load_shotcut_button.pack(pady=5)
         self.settings_button.pack(pady=5)
 
-        # Auto-load markers from the last opened shortcut file
+        # Auto-load markers
         self.auto_load_markers()
 
     def load_image(self):
@@ -131,7 +151,26 @@ class MainWindow:
         photo = ImageTk.PhotoImage(image)
         self.image_label_widget.config(image=photo, text="")
         self.image_label_widget.image = photo
+        
+    def set_background_image(self, image_path):
+        """Sets the background image from the given path."""
+        try:
+            self.background_image = Image.open(image_path)
+            photo = ImageTk.PhotoImage(self.background_image)
 
+            # Update the label with the image
+            self.background_label.config(image=photo)
+            self.background_label.image = photo
+        except Exception as e:
+            print(f"Error loading image: {e}")
+            self.background_image = None
+            self.background_label.config(image="", text="Background load failed")
+    
+    def adjust_window_to_image(self):
+        """Adjusts the window size to match the background image dimensions."""
+        if self.background_image:
+            width, height = self.background_image.size
+            self.root.geometry(f"{width}x{height}")
 
     def load_video(self):
         file_path = self.file_loader.load_video(initialdir=self.last_opened_files.get("video_folder", os.getcwd()))
@@ -158,7 +197,7 @@ class MainWindow:
         if self.video_thread and self.video_thread.is_alive():
             self.root.after(100, self.check_video_thread)
         self.video_label_widget.config(image="", text="No video loaded")
-        
+
     def check_video_thread(self):
         if self.video_thread and self.video_thread.is_alive():
             self.root.after(100, self.check_video_thread)  # Keep checking every 100ms
@@ -219,13 +258,14 @@ class MainWindow:
             self.marker_tree.insert("", "end", values=(marker["Number"], marker["Name"], marker["Time"], marker.get("Picture", ""), marker.get("Video", "")))
 
     def open_settings(self):
-        settings_window = tk.Toplevel(self.root)
-        settings_window.title("Settings")
-        settings_window.geometry("400x300")
-        tk.Label(settings_window, text="Last Opened Files", font=("Arial", 14)).pack(pady=10)
-        for key, file_path in self.last_opened_files.items():
-            tk.Label(settings_window, text=f"{key.capitalize()}: {file_path or 'None'}", anchor="w").pack(fill="x", padx=20, pady=5)
-        tk.Button(settings_window, text="Close", command=settings_window.destroy).pack(pady=20)
+        def save_background_image(selected_image):
+            self.last_opened_files["background_image"] = selected_image
+            self.save_last_opened_files()
+            if selected_image:
+                self.set_background_image(selected_image)
+
+        from gui.settings_window import SettingsWindow
+        SettingsWindow(self.root, self.background_image_path, save_background_image)
 
     def load_last_opened_files(self):
         if os.path.exists(self.config_file):

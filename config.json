@@ -1,7 +1,8 @@
 {
-    "image": "C:/Users/kjuet/OneDrive/.wdc/Bilder/epa3.PNG",
-    "video": "C:/Users/kjuet/Videos/2024-09-13 13-14-37.mp4",
+    "image": "C:/Users/kjuet/OneDrive/.wdc/Bilder/Screenshot 2023-07-19 144104.png",
+    "video": "C:/Users/kjuet/Videos/2024-10-09 17-01-03.mp4",
     "shortcut": "Q:/Python/test.mlt",
     "video_folder": "C:/Users/kjuet/Videos",
-    "image_folder": "C:/Users/kjuet/OneDrive/.wdc/Bilder"
+    "image_folder": "C:/Users/kjuet/OneDrive/.wdc/Bilder",
+    "background_image": "resources\\images\\5.webp"
 }
