@@ -151,97 +151,26 @@ class MainWindow:
 
     def auto_assign_images(self):
         """
-        Automatically assign images to markers if files with matching names exist in a folder.
+        Wrapper for auto-assigning images to markers.
         """
-        print("Starting auto-assign images...")
-        image_folder = filedialog.askdirectory(title="Select Folder Containing Images")
-        if not image_folder:
-            print("No folder selected. Exiting auto-assign images.")
-            return
-
-        print(f"Selected image folder: {image_folder}")
-        for index, marker in enumerate(self.markers):
-            # Safely get the marker name
-            marker_name = marker.get("Name", None)
-            if not marker_name:
-                print(f"Marker at index {index} is missing a 'Name' field. Skipping...")
-                continue  # Skip this marker if 'Name' is not available
-
-            print(f"Checking marker {index} with name '{marker_name}' for matching images...")
-            # Check for an image file with the same name as the marker
-            found = False
-            for ext in [".png", ".jpg", ".jpeg", ".bmp", ".gif", ".webp"]:
-                image_path = os.path.join(image_folder, f"{marker_name}{ext}")
-                print(f"Looking for file: {image_path}")
-                if os.path.exists(image_path):
-                    print(f"Found matching image: {image_path}")
-
-                    # Update the marker
-                    marker["Picture"] = os.path.basename(image_path)  # Update self.markers
-                    self.last_opened_files["image"] = image_path
-
-                    # Update the grid's Picture column
-                    selected_item = self.marker_tree.get_children()[index]
-                    current_values = list(self.marker_tree.item(selected_item, "values"))
-                    current_values[3] = marker["Picture"]  # Update the Picture column
-                    self.marker_tree.item(selected_item, values=current_values)
-
-                    found = True
-                    break
-
-            if not found:
-                print(f"No matching image found for marker '{marker_name}'.")
-
-        print("Completed auto-assign images.")
-
-
+        self.auto_assign_files(
+            file_types=[".png", ".jpg", ".jpeg", ".bmp", ".gif", ".webp"],
+            column_index=3,  # Picture column index
+            file_key="Picture",
+            dialog_title="Select Folder Containing Images"
+        )
 
     def auto_assign_videos(self):
         """
-        Automatically assign videos to markers if files with matching names exist in a folder.
+        Wrapper for auto-assigning videos to markers by searching recursively in a folder.
         """
-        print("Starting auto-assign videos...")
-        video_folder = filedialog.askdirectory(title="Select Folder Containing Videos")
-        if not video_folder:
-            print("No folder selected. Exiting auto-assign videos.")
-            return
-
-        print(f"Selected video folder: {video_folder}")
-        for index, marker in enumerate(self.markers):
-            # Safely get the marker name
-            marker_name = marker.get("Name", None)
-            if not marker_name:
-                print(f"Marker at index {index} is missing a 'Name' field. Skipping...")
-                continue  # Skip this marker if 'Name' is not available
-
-            print(f"Checking marker {index} with name '{marker_name}' for matching videos...")
-            # Check for a video file with the same name as the marker
-            found = False
-            for ext in [".mp4", ".avi", ".mkv", ".mov"]:
-                video_path = os.path.join(video_folder, f"{marker_name}{ext}")
-                print(f"Looking for file: {video_path}")
-                if os.path.exists(video_path):
-                    print(f"Found matching video: {video_path}")
-
-                    # Update the marker
-                    marker["Video"] = os.path.basename(video_path)  # Update self.markers
-                    self.last_opened_files["video"] = video_path
-
-                    # Update the grid's Video column
-                    selected_item = self.marker_tree.get_children()[index]
-                    current_values = list(self.marker_tree.item(selected_item, "values"))
-                    current_values[4] = marker["Video"]  # Update the Video column
-                    self.marker_tree.item(selected_item, values=current_values)
-
-                    found = True
-                    break
-
-            if not found:
-                print(f"No matching video found for marker '{marker_name}'.")
-
-        print("Completed auto-assign videos.")
-
-
+        print("Starting Auto Videos Debugging...")
+        self.auto_assign_files(
+            file_types=[".mp4", ".avi", ".mkv", ".mov"],
+            column_index=4,  # Video column index
+            file_key="Video",
+            dialog_title="Select Folder Containing Videos"
+        )
 
     def add_image_to_marker(self):
         """
@@ -282,6 +211,58 @@ class MainWindow:
                 self.markers[selected_index]["Video"] = video_filename
             else:
                 print("No video loaded to add.")
+    
+    def auto_assign_files(self, file_types, column_index, file_key, dialog_title):
+        """
+        Generalized function to assign files (images/videos) to markers by searching recursively in a folder.
+
+        Parameters:
+        - file_types (list): List of valid file extensions (e.g., [".png", ".jpg"]).
+        - column_index (int): Index of the grid column to update (e.g., 3 for Picture, 4 for Video).
+        - file_key (str): Key in `self.markers` to update (e.g., "Picture" or "Video").
+        - dialog_title (str): Title for the file dialog (e.g., "Select Folder Containing Images").
+        """
+        print(f"Starting recursive auto-assign for {file_key}...")
+        folder = filedialog.askdirectory(title=dialog_title)
+        if not folder:
+            print(f"No folder selected. Exiting auto-assign for {file_key}.")
+            return
+
+        print(f"Selected folder: {folder}")
+        for index, marker in enumerate(self.markers):
+            marker_name = marker.get("Name", None)
+            if not marker_name:
+                print(f"Marker at index {index} is missing a 'Name' field. Skipping...")
+                continue
+
+            print(f"Checking marker {index} with name '{marker_name}' for matching files...")
+            found = False
+            for root, _, files in os.walk(folder):  # Recursively walk through the folder and subfolders
+                for ext in file_types:
+                    file_name = f"{marker_name}{ext}"
+                    if file_name in files:
+                        file_path = os.path.join(root, file_name)
+                        print(f"Found matching file: {file_path}")
+
+                        # Update the marker
+                        marker[file_key] = os.path.basename(file_path)
+                        self.last_opened_files[file_key.lower()] = file_path
+
+                        # Update the grid column
+                        selected_item = self.marker_tree.get_children()[index]
+                        current_values = list(self.marker_tree.item(selected_item, "values"))
+                        current_values[column_index] = marker[file_key]
+                        self.marker_tree.item(selected_item, values=current_values)
+
+                        found = True
+                        break
+                if found:
+                    break
+
+            if not found:
+                print(f"No matching file found for marker '{marker_name}'.")
+
+        print(f"Completed recursive auto-assign for {file_key}.")
 
     def load_image(self):
         file_path = self.file_loader.load_image(initialdir=self.last_opened_files.get("image_folder", os.getcwd()))

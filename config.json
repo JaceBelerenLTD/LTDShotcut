@@ -1,8 +1,10 @@
 {
-    "image": "C:/Users/kjuet/OneDrive/.wdc/Bilder/Unbenannt.gif",
+    "image": "C:/YouTube/LTD/assets/UNITSnew/Mech/6Neo/Neo.png",
     "video": "C:/Users/kjuet/Videos/2024-09-13 13-14-37.mp4",
-    "shortcut": "Q:/Python/test.mlt",
+    "shortcut": "C:/YouTube/LTD97Marker.mlt",
     "video_folder": "C:/Users/kjuet/Videos",
-    "image_folder": "C:/Users/kjuet/OneDrive/.wdc/Bilder",
-    "background_image": "resources\\images\\2.webp"
+    "image_folder": "C:/YouTube/LTD/assets/UNITSnew/Mech/6Neo",
+    "background_image": "resources\\images\\2.webp",
+    "shortcut_folder": "C:/YouTube",
+    "picture": "C:/YouTube/LTD/assets/UNITSnew\\Beast\\1Gnoll Warrior\\gnoll.png"
 }
