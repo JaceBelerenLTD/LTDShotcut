@@ -2,7 +2,7 @@ import json
 import os
 import cv2
 from PIL import Image, ImageTk  # For displaying images
-from tkinter import ttk
+from tkinter import ttk, filedialog
 import tkinter as tk
 from threading import Thread  # To handle video playback without freezing the GUI
 from Services.file_loader import FileLoader
@@ -136,6 +136,152 @@ class MainWindow:
 
         # Auto-load markers
         self.auto_load_markers()
+
+        self.add_image_button = ttk.Button(self.controls_frame, text="Add Image to Marker", command=self.add_image_to_marker)
+        self.add_video_button = ttk.Button(self.controls_frame, text="Add Video to Marker", command=self.add_video_to_marker)
+
+        self.add_image_button.pack(pady=5)
+        self.add_video_button.pack(pady=5)
+
+        self.auto_images_button = ttk.Button(self.controls_frame, text="Auto Images", command=self.auto_assign_images)
+        self.auto_videos_button = ttk.Button(self.controls_frame, text="Auto Videos", command=self.auto_assign_videos)
+
+        self.auto_images_button.pack(pady=5)
+        self.auto_videos_button.pack(pady=5)
+
+    def auto_assign_images(self):
+        """
+        Automatically assign images to markers if files with matching names exist in a folder.
+        """
+        print("Starting auto-assign images...")
+        image_folder = filedialog.askdirectory(title="Select Folder Containing Images")
+        if not image_folder:
+            print("No folder selected. Exiting auto-assign images.")
+            return
+
+        print(f"Selected image folder: {image_folder}")
+        for index, marker in enumerate(self.markers):
+            # Safely get the marker name
+            marker_name = marker.get("Name", None)
+            if not marker_name:
+                print(f"Marker at index {index} is missing a 'Name' field. Skipping...")
+                continue  # Skip this marker if 'Name' is not available
+
+            print(f"Checking marker {index} with name '{marker_name}' for matching images...")
+            # Check for an image file with the same name as the marker
+            found = False
+            for ext in [".png", ".jpg", ".jpeg", ".bmp", ".gif", ".webp"]:
+                image_path = os.path.join(image_folder, f"{marker_name}{ext}")
+                print(f"Looking for file: {image_path}")
+                if os.path.exists(image_path):
+                    print(f"Found matching image: {image_path}")
+
+                    # Update the marker
+                    marker["Picture"] = os.path.basename(image_path)  # Update self.markers
+                    self.last_opened_files["image"] = image_path
+
+                    # Update the grid's Picture column
+                    selected_item = self.marker_tree.get_children()[index]
+                    current_values = list(self.marker_tree.item(selected_item, "values"))
+                    current_values[3] = marker["Picture"]  # Update the Picture column
+                    self.marker_tree.item(selected_item, values=current_values)
+
+                    found = True
+                    break
+
+            if not found:
+                print(f"No matching image found for marker '{marker_name}'.")
+
+        print("Completed auto-assign images.")
+
+
+
+    def auto_assign_videos(self):
+        """
+        Automatically assign videos to markers if files with matching names exist in a folder.
+        """
+        print("Starting auto-assign videos...")
+        video_folder = filedialog.askdirectory(title="Select Folder Containing Videos")
+        if not video_folder:
+            print("No folder selected. Exiting auto-assign videos.")
+            return
+
+        print(f"Selected video folder: {video_folder}")
+        for index, marker in enumerate(self.markers):
+            # Safely get the marker name
+            marker_name = marker.get("Name", None)
+            if not marker_name:
+                print(f"Marker at index {index} is missing a 'Name' field. Skipping...")
+                continue  # Skip this marker if 'Name' is not available
+
+            print(f"Checking marker {index} with name '{marker_name}' for matching videos...")
+            # Check for a video file with the same name as the marker
+            found = False
+            for ext in [".mp4", ".avi", ".mkv", ".mov"]:
+                video_path = os.path.join(video_folder, f"{marker_name}{ext}")
+                print(f"Looking for file: {video_path}")
+                if os.path.exists(video_path):
+                    print(f"Found matching video: {video_path}")
+
+                    # Update the marker
+                    marker["Video"] = os.path.basename(video_path)  # Update self.markers
+                    self.last_opened_files["video"] = video_path
+
+                    # Update the grid's Video column
+                    selected_item = self.marker_tree.get_children()[index]
+                    current_values = list(self.marker_tree.item(selected_item, "values"))
+                    current_values[4] = marker["Video"]  # Update the Video column
+                    self.marker_tree.item(selected_item, values=current_values)
+
+                    found = True
+                    break
+
+            if not found:
+                print(f"No matching video found for marker '{marker_name}'.")
+
+        print("Completed auto-assign videos.")
+
+
+
+    def add_image_to_marker(self):
+        """
+        Add the current loaded image's filename to the selected marker row.
+        """
+        selected_item = self.marker_tree.focus()  # Get the selected row
+        if selected_item:
+            # Get the current image file name
+            if "image" in self.last_opened_files and self.last_opened_files["image"]:
+                image_filename = os.path.basename(self.last_opened_files["image"])
+                # Update the grid's Picture column for the selected row
+                values = self.marker_tree.item(selected_item, "values")
+                updated_values = list(values)
+                updated_values[3] = image_filename  # Picture column is the 4th column (index 3)
+                self.marker_tree.item(selected_item, values=updated_values)
+                # Update the corresponding entry in self.markers
+                selected_index = self.marker_tree.index(selected_item)
+                self.markers[selected_index]["Picture"] = image_filename
+            else:
+                print("No image loaded to add.")
+
+    def add_video_to_marker(self):
+        """
+        Add the current loaded video's filename to the selected marker row.
+        """
+        selected_item = self.marker_tree.focus()  # Get the selected row
+        if selected_item:
+            # Get the current video file name
+            if "video" in self.last_opened_files and self.last_opened_files["video"]:
+                video_filename = os.path.basename(self.last_opened_files["video"])
+                # Update the grid's Video column for the selected row
+                values = self.marker_tree.item(selected_item, "values")
+                updated_values = list(values)
+                updated_values[4] = video_filename  # Video column is the 5th column (index 4)
+                self.marker_tree.item(selected_item, values=updated_values)
+                # Update the corresponding entry in self.markers
+                selected_index = self.marker_tree.index(selected_item)
+                self.markers[selected_index]["Video"] = video_filename
+            else:
+                print("No video loaded to add.")
 
     def load_image(self):
         file_path = self.file_loader.load_image(initialdir=self.last_opened_files.get("image_folder", os.getcwd()))
