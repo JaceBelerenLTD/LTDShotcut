@@ -52,10 +52,10 @@ class MainWindow:
         self.text_frame = ttk.Frame(self.root, style="Blue.TFrame")
         self.controls_frame = ttk.Frame(self.root, style="Blue.TFrame")
 
-        self.image_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-        self.video_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
-        self.text_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
-        self.controls_frame.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+        self.image_frame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+        self.video_frame.grid(row=0, column=1, padx=20, pady=20, sticky="nsew")
+        self.text_frame.grid(row=1, column=0, padx=20, pady=20, sticky="nsew")
+        self.controls_frame.grid(row=1, column=1, padx=12, pady=20, sticky="nsew")
 
         # Configure grid weights
         self.root.grid_rowconfigure(0, weight=1)
@@ -69,9 +69,36 @@ class MainWindow:
         style.configure("Blue.TLabel", background=BACKGROUND_COLOR)
         style.configure("Blue.TButton", background=BACKGROUND_COLOR)
 
-        # Image viewer
-        self.image_viewer = ImageViewer(self.image_frame)
-        self.image_label_widget = ttk.Label(self.image_frame, anchor="center", style="Blue.TLabel")
+        # Image controls
+        self.image_control_frame = ttk.Frame(self.image_frame, style="Blue.TLabel")
+        self.image_control_frame.pack(fill="x", side="top", pady=5)
+
+        self.image_display_frame = ttk.Frame(self.image_frame)
+        self.image_display_frame.pack(fill="both", expand=True)
+
+        self.show_image_button = ttk.Button(self.image_control_frame, text="Show", command=self.show_image, style="Blue.TButton")
+        self.show_image_button.pack(side="left", padx=5)
+        self.hide_image_button = ttk.Button(self.image_control_frame, text="Hide", command=self.hide_image, style="Blue.TButton")
+        self.hide_image_button.pack(side="left", padx=5)        
+        
+        image_file = self.last_opened_files.get("image")
+        if image_file and os.path.exists(image_file):
+            image_name = os.path.basename(image_file)
+            self.image_label_widget = ttk.Label(
+                self.image_display_frame, 
+                text=f"Image loaded, ready to show\n{image_name}",  # Display status and filename
+                anchor="center", 
+                style="Blue.TLabel"
+            )
+            self.current_image_path = image_file  # Ensure current_image_path is set
+        else:
+            self.image_label_widget = ttk.Label(
+                self.image_display_frame, 
+                text="No image loaded",  # Default text
+                anchor="center", 
+                style="Blue.TLabel"
+            )
+
         self.image_label_widget.pack(fill="both", expand=True)
 
         # Video controls
@@ -88,7 +115,23 @@ class MainWindow:
         self.stop_button = ttk.Button(self.video_control_frame, text="Stop", command=self.stop_video_controls, style="Blue.TButton")
         self.stop_button.pack(side="left", padx=5)
 
-        self.video_label_widget = ttk.Label(self.video_display_frame, text="No video loaded", anchor="center", style="Blue.TLabel")
+        video_file = self.last_opened_files.get("video")
+        if video_file and os.path.exists(video_file):
+            video_name = os.path.basename(video_file)
+            self.video_label_widget = ttk.Label(
+                self.video_display_frame, 
+                text=f"Video loaded, ready to play\n{video_name}",  # Display status and filename
+                anchor="center", 
+                style="Blue.TLabel"
+            )
+            self.current_video_path = video_file  # Ensure current_video_path is set
+        else:
+            self.video_label_widget = ttk.Label(
+                self.video_display_frame, 
+                text="No video loaded",  # Default text
+                anchor="center", 
+                style="Blue.TLabel"
+            )
         self.video_label_widget.pack(fill="both", expand=True)
 
         # Marker tree
@@ -172,6 +215,45 @@ class MainWindow:
             dialog_title="Select Folder Containing Videos"
         )
 
+    def show_image(self):
+        """
+        Show the currently loaded image in the image panel.
+        """
+        if "image" in self.last_opened_files and self.last_opened_files["image"]:
+            file_path = self.last_opened_files["image"]
+            if os.path.exists(file_path):
+                # Reload and display the image
+                image = Image.open(file_path)
+                image = image.resize(
+                    (self.image_frame.winfo_width(), self.image_frame.winfo_height()),
+                    Image.Resampling.LANCZOS,
+                )
+                photo = ImageTk.PhotoImage(image)
+                self.image_label_widget.config(image=photo, text="")
+                self.image_label_widget.image = photo
+            else:
+                print(f"Image file not found: {file_path}")
+                self.image_label_widget.config(image="", text="No image loaded")
+        else:
+            print("No image loaded to show.")
+            self.image_label_widget.config(image="", text="No image loaded")
+
+    def hide_image(self):
+        """
+        Hide the currently displayed image in the image panel.
+        """
+        # Retrieve the image name from the last opened files if it exists
+        image_path = self.last_opened_files.get("image", None)
+        if image_path:
+            image_name = os.path.basename(image_path)
+        else:
+            image_name = "No image loaded"
+        
+        # Update the label widget with the image name
+        self.image_label_widget.config(image="", text=f"Image hidden\n{image_name}")
+        self.image_label_widget.image = None
+
+
     def add_image_to_marker(self):
         """
         Add the current loaded image's filename to the selected marker row.
@@ -238,14 +320,11 @@ class MainWindow:
             print(f"Checking marker {index} with name '{marker_name}' for matching files...")
             found = False
             for root, _, files in os.walk(folder):  # Recursively walk through the folder and subfolders
-                print(f"Searching in: {root}")  # Debug: Print the current folder being searched
                 for ext in file_types:
                     file_name = f"{marker_name.strip()}{ext}"  # Ensure no extra spaces in the file name
-                    print(f"Looking for file: {file_name}")  # Debug: File name being searched
                     for file in files:
                         if file.lower() == file_name.lower():  # Case-insensitive match
                             file_path = os.path.join(root, file)
-                            print(f"Found matching file: {file_path}")  # Debug: Match found
 
                             # Update the marker
                             marker[file_key] = os.path.basename(file_path)
@@ -273,18 +352,13 @@ class MainWindow:
     def load_image(self):
         file_path = self.file_loader.load_image(initialdir=self.last_opened_files.get("image_folder", os.getcwd()))
         if not file_path:
+            self.image_label_widget.config(text="No image loaded") 
             return
         self.last_opened_files["image"] = file_path
         self.last_opened_files["image_folder"] = os.path.dirname(file_path)
         self.save_last_opened_files()
+        self.show_image()
 
-        # Display image directly in image_label_widget
-        image = Image.open(file_path)
-        image = image.resize((self.image_frame.winfo_width(), self.image_frame.winfo_height()), Image.Resampling.LANCZOS)
-        photo = ImageTk.PhotoImage(image)
-        self.image_label_widget.config(image=photo, text="")
-        self.image_label_widget.image = photo
-        
     def set_background_image(self, image_path):
         """Sets the background image from the given path."""
         try:
@@ -313,7 +387,10 @@ class MainWindow:
         self.last_opened_files["video_folder"] = os.path.dirname(file_path)
         self.save_last_opened_files()
         self.current_video_path = file_path
-        self.video_label_widget.config(text="Video loaded, ready to play")
+
+        video_name = os.path.basename(file_path)
+        self.video_label_widget.config(text=f"Video loaded, ready to play\n{video_name}")
+
 
     def play_video_controls(self):
         if not self.current_video_path:
@@ -326,10 +403,19 @@ class MainWindow:
         self.pause_video_flag = True
 
     def stop_video_controls(self):
+        """
+        Stop the currently playing video and update the label to display 'Video stopped' with the file name.
+        """
         self.stop_video_flag = True
         if self.video_thread and self.video_thread.is_alive():
             self.root.after(100, self.check_video_thread)
-        self.video_label_widget.config(image="", text="No video loaded")
+
+        # Get the video file name if available
+        if self.current_video_path:
+            video_name = os.path.basename(self.current_video_path)
+            self.video_label_widget.config(image="", text=f"Video stopped\n{video_name}")
+        else:
+            self.video_label_widget.config(image="", text="No video loaded")
 
     def check_video_thread(self):
         if self.video_thread and self.video_thread.is_alive():
@@ -384,11 +470,7 @@ class MainWindow:
             self.markers = self.media_handler.extract_markers_from_file(shortcut_file) or []
             self.display_markers()
 
-    # def display_markers(self):
-    #     for item in self.marker_tree.get_children():
-    #         self.marker_tree.delete(item)
-    #     for marker in self.markers:
-    #         self.marker_tree.insert("", "end", values=(marker["Number"], marker["Name"], marker["Time"], marker.get("Picture", ""), marker.get("Video", "")))
+
 
     def display_markers(self):
         """
@@ -435,6 +517,9 @@ class MainWindow:
 
         from gui.settings_window import SettingsWindow
         SettingsWindow(self.root, self.background_image_path, save_background_image)
+
+
+
 
     def load_last_opened_files(self):
         if os.path.exists(self.config_file):

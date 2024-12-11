@@ -9,8 +9,6 @@ class ImageViewer:
     def __init__(self, parent):
         self.label = tk.Label(parent, text="Image Viewer")
         self.label.pack()
-        self.image_label = tk.Label(parent)
-        self.image_label.pack()
 
     def load_image(self):
         file_path = filedialog.askopenfilename(filetypes=[("Image Files", "*.png;*.jpg;*.jpeg")])
