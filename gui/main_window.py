@@ -238,23 +238,28 @@ class MainWindow:
             print(f"Checking marker {index} with name '{marker_name}' for matching files...")
             found = False
             for root, _, files in os.walk(folder):  # Recursively walk through the folder and subfolders
+                print(f"Searching in: {root}")  # Debug: Print the current folder being searched
                 for ext in file_types:
-                    file_name = f"{marker_name}{ext}"
-                    if file_name in files:
-                        file_path = os.path.join(root, file_name)
-                        print(f"Found matching file: {file_path}")
+                    file_name = f"{marker_name.strip()}{ext}"  # Ensure no extra spaces in the file name
+                    print(f"Looking for file: {file_name}")  # Debug: File name being searched
+                    for file in files:
+                        if file.lower() == file_name.lower():  # Case-insensitive match
+                            file_path = os.path.join(root, file)
+                            print(f"Found matching file: {file_path}")  # Debug: Match found
 
-                        # Update the marker
-                        marker[file_key] = os.path.basename(file_path)
-                        self.last_opened_files[file_key.lower()] = file_path
+                            # Update the marker
+                            marker[file_key] = os.path.basename(file_path)
+                            self.last_opened_files[file_key.lower()] = file_path
 
-                        # Update the grid column
-                        selected_item = self.marker_tree.get_children()[index]
-                        current_values = list(self.marker_tree.item(selected_item, "values"))
-                        current_values[column_index] = marker[file_key]
-                        self.marker_tree.item(selected_item, values=current_values)
+                            # Update the grid column
+                            selected_item = self.marker_tree.get_children()[index]
+                            current_values = list(self.marker_tree.item(selected_item, "values"))
+                            current_values[column_index] = marker[file_key]
+                            self.marker_tree.item(selected_item, values=current_values)
 
-                        found = True
+                            found = True
+                            break
+                    if found:
                         break
                 if found:
                     break
@@ -263,6 +268,7 @@ class MainWindow:
                 print(f"No matching file found for marker '{marker_name}'.")
 
         print(f"Completed recursive auto-assign for {file_key}.")
+
 
     def load_image(self):
         file_path = self.file_loader.load_image(initialdir=self.last_opened_files.get("image_folder", os.getcwd()))
@@ -378,11 +384,47 @@ class MainWindow:
             self.markers = self.media_handler.extract_markers_from_file(shortcut_file) or []
             self.display_markers()
 
+    # def display_markers(self):
+    #     for item in self.marker_tree.get_children():
+    #         self.marker_tree.delete(item)
+    #     for marker in self.markers:
+    #         self.marker_tree.insert("", "end", values=(marker["Number"], marker["Name"], marker["Time"], marker.get("Picture", ""), marker.get("Video", "")))
+
     def display_markers(self):
+        """
+        Display markers in the Treeview with rows colored based on their marker color.
+        """
+        # Clear the current contents of the marker tree
         for item in self.marker_tree.get_children():
             self.marker_tree.delete(item)
+
+        # Keep track of tags we've configured
+        configured_tags = set()
+
+        # Add new markers with tags for color
         for marker in self.markers:
-            self.marker_tree.insert("", "end", values=(marker["Number"], marker["Name"], marker["Time"], marker.get("Picture", ""), marker.get("Video", "")))
+            marker_color = marker.get("Color", "#FFFFFF")  # Default to white if no color is specified
+            tag_name = marker_color
+
+            # Add a tag with the color if it hasn't been configured yet
+            if tag_name not in configured_tags:
+                self.marker_tree.tag_configure(tag_name, background=marker_color)
+                configured_tags.add(tag_name)
+
+            # Insert the marker with the tag
+            self.marker_tree.insert(
+                "",
+                "end",
+                values=(
+                    marker["Number"],
+                    marker["Name"],
+                    marker["Time"],
+                    marker.get("Picture", ""),
+                    marker.get("Video", "")
+                ),
+                tags=(tag_name,)
+            )
+
 
     def open_settings(self):
         def save_background_image(selected_image):
