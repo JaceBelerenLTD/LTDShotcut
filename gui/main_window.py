@@ -470,7 +470,41 @@ class MainWindow:
             self.markers = self.media_handler.extract_markers_from_file(shortcut_file) or []
             self.display_markers()
 
+    def process_and_export(self):
+        """
+        Loads an .mlt file, applies processing, and exports it to the selected folder.
+        """
+        input_file_path = self.last_opened_files.get("shortcut")  # Path to the loaded .mlt file
+        if not input_file_path:
+            print("No .mlt file loaded.")
+            return
 
+        # Get the export folder from settings
+        from gui.settings_window import SettingsWindow
+        settings = SettingsWindow(self.root, None, None)
+        output_folder = settings.export_folder
+        if not output_folder:
+            print("No export folder selected.")
+            return
+
+        # Modifications to apply (example)
+        modifications = {
+            "property[@name='example_property']": "new_value"
+        }
+
+        # Process and export the file
+        exported_file = self.media_handler.process_and_export_mlt(input_file_path, output_folder, modifications)
+        if exported_file:
+            print(f"File exported successfully to: {exported_file}")
+
+    def get_export_folder(self):
+        """Retrieve the export folder from settings."""
+        config_file = "config.json"
+        if os.path.exists(config_file):
+            with open(config_file, "r") as file:
+                config = json.load(file)
+            return config.get("export_folder", "")
+        return ""
 
     def display_markers(self):
         """
@@ -500,7 +534,7 @@ class MainWindow:
                 values=(
                     marker["Number"],
                     marker["Name"],
-                    marker["Time"],
+                    marker["StartTime"],
                     marker.get("Picture", ""),
                     marker.get("Video", "")
                 ),

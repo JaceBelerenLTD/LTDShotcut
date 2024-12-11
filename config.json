@@ -1,11 +1,11 @@
 {
     "image": "C:/Users/kjuet/OneDrive/.wdc/Bilder/ePA_Mit_Dateien.PNG",
     "video": "C:/Users/kjuet/Videos/mage.mp4",
-    "shortcut": "Q:/Python/Shotcuthandler/resources/LTD97Marker.mlt",
+    "shortcut": "C:/YouTube/LTD97Marker.mlt",
     "video_folder": "C:/Users/kjuet/Videos",
     "image_folder": "C:/Users/kjuet/OneDrive/.wdc/Bilder",
-    "background_image": "resources\\images\\4.webp",
-    "shortcut_folder": "Q:/Python/Shotcuthandler/resources",
+    "background_image": "resources\\images\\resources\\images\\2.webp",
+    "shortcut_folder": "C:/YouTube",
     "picture": "C:/YouTube/LTD/assets/UNITSnew\\Beast\\1Gnoll Warrior\\gnoll.png",
     "background_color": "#f44dd2"
 }
