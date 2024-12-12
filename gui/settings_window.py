@@ -5,16 +5,23 @@ import json  # To handle configuration file reading and writing
 from resources.styles import IMAGES_PATH
 
 class SettingsWindow:
-    def __init__(self, parent, current_background_image, save_callback):
+    def __init__(self, parent, save_callback):
         self.parent = parent
-        self.current_background_image = current_background_image
         self.save_callback = save_callback
-
-        # Create the settings window
         self.window = tk.Toplevel(parent)
         self.window.title("Settings")
         self.window.geometry("500x400")
+        self.config_file = "config.json"
 
+         # Fetch current settings from config.json
+        self.config = self.load_config()
+        self.current_background_image = self.config.get("background_image", "Not Set")
+        self.current_export_folder = self.config.get("export_folder", "Not Set")
+
+        # Build the settings UI (background image, export folder, etc.)
+        self.build_ui()
+
+    def build_ui(self):
         # Create grid layout
         self.grid = ttk.Frame(self.window)
         self.grid.pack(fill="both", expand=True, padx=10, pady=10)
@@ -47,6 +54,13 @@ class SettingsWindow:
         self.save_button = ttk.Button(self.window, text="Save", command=self.save_settings)
         self.save_button.pack(side="bottom", pady=10)
 
+    def load_config(self):
+        """Load the configuration from config.json."""
+        if os.path.exists(self.config_file):
+            with open(self.config_file, "r") as file:
+                return json.load(file)
+        return {}
+    
     def get_available_images(self):
         """Get the list of available images."""
         if os.path.exists(IMAGES_PATH):
@@ -69,12 +83,11 @@ class SettingsWindow:
             self.export_folder_var.set(folder)
 
     def save_settings(self):
-        """Save the settings and update the config.json file."""
-        print("Debug: Save button pressed")  # Debugging
+        """Save changes to settings and update config.json."""
+        # Load the existing configuration
         config_file = "config.json"
         config = {}
 
-        # Load existing config
         if os.path.exists(config_file):
             with open(config_file, "r") as file:
                 try:
@@ -82,21 +95,16 @@ class SettingsWindow:
                 except json.JSONDecodeError:
                     print("Debug: Error decoding JSON. Using empty config.")
 
-        # Update config values
-        export_folder = self.export_folder_var.get()
-        background_image = self.image_var.get()  # Get only the file name
-        if export_folder:
-            config["export_folder"] = export_folder
-        if background_image:
-            config["background_image"] = os.path.join(IMAGES_PATH, background_image)  # Save full path
+        # Update config with new values
+        selected_image = self.image_var.get()
+        config["background_image"] = os.path.join(IMAGES_PATH, self.image_var.get())  # Save the selected background image
+        config["export_folder"] = self.export_folder_var.get()  # Save the selected export folder
 
-        # Save the updated config
+        # Save the updated configuration
         with open(config_file, "w") as file:
             json.dump(config, file, indent=4)
-            print(f"Debug: Config saved: {config}")
 
-        # Update the parent with the new background image
-        if self.save_callback and background_image:
-            self.save_callback(os.path.join(IMAGES_PATH, background_image))
+        self.save_callback(os.path.join(IMAGES_PATH, selected_image))
 
+        # Close the settings window
         self.window.destroy()

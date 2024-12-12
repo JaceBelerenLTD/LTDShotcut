@@ -544,14 +544,14 @@ class MainWindow:
 
     def open_settings(self):
         def save_background_image(selected_image):
+            """Callback to update the background image."""
             self.last_opened_files["background_image"] = selected_image
             self.save_last_opened_files()
             if selected_image:
-                self.set_background_image(selected_image)
+                self.set_background_image(selected_image)  # Update the background immediately
 
         from gui.settings_window import SettingsWindow
-        SettingsWindow(self.root, self.background_image_path, save_background_image)
-
+        SettingsWindow(self.root, save_background_image)
 
 
 
