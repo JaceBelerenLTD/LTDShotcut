@@ -9,6 +9,7 @@ from Services.file_loader import FileLoader
 from Services.media_handler import MediaHandler
 from gui.components import ImageViewer, VideoPlayer
 from resources.styles import BACKGROUND_COLOR
+from gui.export_manager import ExportManager
 
 
 class MainWindow:
@@ -24,6 +25,12 @@ class MainWindow:
         # Set the root window background
         self.background_label = ttk.Label(self.root)
         self.background_label.place(relwidth=1, relheight=1)
+        
+        # Bind the WM_DELETE_WINDOW event to a custom handler
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+
+        # Store references to child windows
+        self.child_windows = []
 
         # Load and set the background image
         self.background_image = None  # To store the loaded background image
@@ -171,7 +178,9 @@ class MainWindow:
         self.load_video_button = ttk.Button(self.controls_frame, text="Load Video", command=self.load_video)
         self.load_shotcut_button = ttk.Button(self.controls_frame, text="Load Shotcut File", command=self.load_shotcut)
         self.settings_button = ttk.Button(self.controls_frame, text="Settings", command=self.open_settings)
-
+        self.start_export_button = ttk.Button(self.controls_frame, text="Start Export", command=self.start_export_manager)
+        
+        self.start_export_button.pack(pady=5)
         self.load_image_button.pack(pady=5)
         self.load_video_button.pack(pady=5)
         self.load_shotcut_button.pack(pady=5)
@@ -191,6 +200,17 @@ class MainWindow:
 
         self.auto_images_button.pack(pady=5)
         self.auto_videos_button.pack(pady=5)
+        
+    def on_close(self):
+            for window in self.child_windows:
+                if window.winfo_exists():  # Check if the window is still open
+                    window.destroy()
+            self.root.destroy()
+
+    def start_export_manager(self):
+        from gui.export_manager import ExportManager
+        export_window = ExportManager(self.root)
+        self.child_windows.append(export_window.window)
 
     def auto_assign_images(self):
         """
@@ -546,12 +566,13 @@ class MainWindow:
         def save_background_image(selected_image):
             """Callback to update the background image."""
             self.last_opened_files["background_image"] = selected_image
-            self.save_last_opened_files()
+#            self.save_last_opened_files()
             if selected_image:
                 self.set_background_image(selected_image)  # Update the background immediately
 
         from gui.settings_window import SettingsWindow
         SettingsWindow(self.root, save_background_image)
+        self.child_windows.append(settings_window.window)
 
 
 

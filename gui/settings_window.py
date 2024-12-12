@@ -17,6 +17,8 @@ class SettingsWindow:
         self.config = self.load_config()
         self.current_background_image = self.config.get("background_image", "Not Set")
         self.current_export_folder = self.config.get("export_folder", "Not Set")
+        print(f"BACKGROUND IMAGE: {self.current_background_image}")  # Using f-string
+        print(f"EXPORT FOLDER: {self.current_export_folder}")
 
         # Build the settings UI (background image, export folder, etc.)
         self.build_ui()
@@ -84,27 +86,48 @@ class SettingsWindow:
 
     def save_settings(self):
         """Save changes to settings and update config.json."""
+        print("Debug: Save button pressed.")  # Debug
         # Load the existing configuration
-        config_file = "config.json"
+        config_file = self.config_file
         config = {}
-
+        
+        print(f"Debug: Reading configuration from {config_file}")  # Debug
         if os.path.exists(config_file):
             with open(config_file, "r") as file:
                 try:
                     config = json.load(file)
-                except json.JSONDecodeError:
-                    print("Debug: Error decoding JSON. Using empty config.")
+                    print(f"Debug: Loaded configuration: {config}")  # Debug
+                except json.JSONDecodeError as e:
+                    print(f"Debug: Error decoding JSON. Using empty config. Error: {e}")
 
         # Update config with new values
         selected_image = self.image_var.get()
-        config["background_image"] = os.path.join(IMAGES_PATH, self.image_var.get())  # Save the selected background image
-        config["export_folder"] = self.export_folder_var.get()  # Save the selected export folder
+        print(f"Debug: Selected background image: {selected_image}")  # Debug
+        background_image_path = os.path.join(IMAGES_PATH, selected_image)
+        print(f"Debug: Full path for background image: {background_image_path}")  # Debug
+
+        export_folder = self.export_folder_var.get()
+        print(f"Debug: Selected export folder: {export_folder}")  # Debug
+
+        config["background_image"] = background_image_path  # Save the selected background image
+        config["export_folder"] = export_folder  # Save the selected export folder
 
         # Save the updated configuration
+        print("Debug: Saving updated configuration to file.")  # Debug
         with open(config_file, "w") as file:
             json.dump(config, file, indent=4)
+            print(f"Debug: Configuration saved successfully: {config}")  # Debug
+            
+        # Read the file back to verify
+        with open(config_file, "r") as file:
+            saved_config = json.load(file)
+            print(f"Debug: Configuration file content after saving: {saved_config}")
 
-        self.save_callback(os.path.join(IMAGES_PATH, selected_image))
+        # Call save_callback with the updated background image
+        print(f"Debug: Calling save_callback with: {background_image_path}")  # Debug
+        self.save_callback(background_image_path)
 
         # Close the settings window
+        print("Debug: Closing the settings window.")  # Debug
         self.window.destroy()
+
