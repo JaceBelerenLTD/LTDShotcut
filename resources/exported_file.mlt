@@ -1,10 +1,10 @@
 <?xml version="1.0" ?>
-<mlt LC_NUMERIC="C" title="Shotcut version 24.02.29" producer="main_bin">
+<mlt LC_NUMERIC="C" version="7.23.0" title="Shotcut version 24.02.29" producer="main_bin">
   <profile description="automatic" width="1920" height="1080" progressive="1" sample_aspect_num="1" sample_aspect_den="1" display_aspect_num="16" display_aspect_den="9" frame_rate_num="60" frame_rate_den="1" colorspace="709"/>
   <chain id="chain0" out="00:00:05.717">
     <property name="length">00:00:05.733</property>
     <property name="eof">pause</property>
-    <property name="resource">LTD/Videos/raw/LTD_97/intro.mp4</property>
+    <property name="resource">intro.mp4</property>
     <property name="mlt_service">avformat-novalidate</property>
     <property name="meta.media.nb_streams">2</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -55,54 +55,10 @@
     <property name="xml">was here</property>
     <property name="shotcut:hash">19eaeab99d03c1e9b64d2c0fb1ee68ef</property>
   </chain>
-  <producer id="producer1" in="00:00:00.000" out="03:59:59.983">
-    <property name="length">04:00:00.000</property>
+  <chain id="chain1" out="00:19:08.067">
+    <property name="length">00:19:08.083</property>
     <property name="eof">pause</property>
-    <property name="resource">LTD/Videos/raw/LTD_97/grid.png</property>
-    <property name="ttl">1</property>
-    <property name="aspect_ratio">1</property>
-    <property name="meta.media.progressive">1</property>
-    <property name="seekable">1</property>
-    <property name="format">2</property>
-    <property name="meta.media.width">270</property>
-    <property name="meta.media.height">110</property>
-    <property name="mlt_service">qimage</property>
-    <property name="text">INVALID</property>
-    <property name="fgcolour">0xffffffff</property>
-    <property name="bgcolour">0x00000000</property>
-    <property name="olcolour">0x00000000</property>
-    <property name="outline">0</property>
-    <property name="align">left</property>
-    <property name="pad">0</property>
-    <property name="family">Sans</property>
-    <property name="size">48</property>
-    <property name="style">normal</property>
-    <property name="weight">400</property>
-    <property name="encoding">UTF-8</property>
-    <property name="creation_time">2023-11-19T13:11:20</property>
-    <property name="xml">was here</property>
-    <property name="shotcut:hash">7be89c99609364b31c10eb796dd0d96e</property>
-  </producer>
-  <producer id="producer0" in="00:00:00.000" out="03:59:59.983">
-    <property name="length">04:00:00.000</property>
-    <property name="eof">pause</property>
-    <property name="resource">LTD/Videos/raw/LTD_97/rahmen.png</property>
-    <property name="ttl">1</property>
-    <property name="aspect_ratio">1</property>
-    <property name="meta.media.progressive">1</property>
-    <property name="seekable">1</property>
-    <property name="format">2</property>
-    <property name="meta.media.width">1238</property>
-    <property name="meta.media.height">515</property>
-    <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-02-29T18:16:15</property>
-    <property name="xml">was here</property>
-    <property name="shotcut:hash">5a8ec1b7060775be152e7edd7824e82f</property>
-  </producer>
-  <chain id="chain1" out="00:48:28.933">
-    <property name="length">00:48:28.950</property>
-    <property name="eof">pause</property>
-    <property name="resource">LTD/Videos/raw/LTD_97/2024-05-18 20-25-09.mkv</property>
+    <property name="resource">2024-09-27 16-34-35.mkv</property>
     <property name="mlt_service">avformat-novalidate</property>
     <property name="meta.media.nb_streams">3</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -118,7 +74,7 @@
     <property name="meta.media.0.codec.name">h264</property>
     <property name="meta.media.0.codec.long_name">H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10</property>
     <property name="meta.media.0.codec.bit_rate">0</property>
-    <property name="meta.attr.0.stream.DURATION.markup">00:48:28.950000000</property>
+    <property name="meta.attr.0.stream.DURATION.markup">00:19:08.084000000</property>
     <property name="meta.media.1.stream.type">audio</property>
     <property name="meta.media.1.codec.sample_fmt">fltp</property>
     <property name="meta.media.1.codec.sample_rate">48000</property>
@@ -126,8 +82,8 @@
     <property name="meta.media.1.codec.name">aac</property>
     <property name="meta.media.1.codec.long_name">AAC (Advanced Audio Coding)</property>
     <property name="meta.media.1.codec.bit_rate">0</property>
-    <property name="meta.attr.1.stream.title.markup">MIC</property>
-    <property name="meta.attr.1.stream.DURATION.markup">00:48:28.885000000</property>
+    <property name="meta.attr.1.stream.title.markup">MIC (Mic)</property>
+    <property name="meta.attr.1.stream.DURATION.markup">00:19:08.010000000</property>
     <property name="meta.media.2.stream.type">audio</property>
     <property name="meta.media.2.codec.sample_fmt">fltp</property>
     <property name="meta.media.2.codec.sample_rate">48000</property>
@@ -135,15 +91,15 @@
     <property name="meta.media.2.codec.name">aac</property>
     <property name="meta.media.2.codec.long_name">AAC (Advanced Audio Coding)</property>
     <property name="meta.media.2.codec.bit_rate">0</property>
-    <property name="meta.attr.2.stream.title.markup">GAME</property>
-    <property name="meta.attr.2.stream.DURATION.markup">00:48:28.885000000</property>
+    <property name="meta.attr.2.stream.title.markup">GAME (Game)</property>
+    <property name="meta.attr.2.stream.DURATION.markup">00:19:08.010000000</property>
     <property name="meta.attr.ENCODER.markup">Lavf60.16.100</property>
     <property name="seekable">1</property>
     <property name="meta.media.sample_aspect_num">1</property>
     <property name="meta.media.sample_aspect_den">1</property>
     <property name="audio_index">1</property>
     <property name="video_index">0</property>
-    <property name="creation_time">2024-05-18T19:13:39</property>
+    <property name="creation_time">2024-09-27T14:53:44</property>
     <property name="vstream">0</property>
     <property name="meta.media.frame_rate_num">60</property>
     <property name="meta.media.frame_rate_den">1</property>
@@ -156,17 +112,15 @@
     <property name="meta.media.color_range">mpeg</property>
     <property name="astream">0</property>
     <property name="xml">was here</property>
-    <property name="shotcut:hash">09ccd4ff6b9958dd4f555676b2d1cd9c</property>
+    <property name="shotcut:hash">4f71c84443aeddfff59db97a3bd3d764</property>
   </chain>
   <playlist id="main_bin">
     <property name="xml_retain">1</property>
     <entry producer="chain0" in="00:00:00.000" out="00:00:05.717"/>
-    <entry producer="producer1" in="00:00:00.000" out="00:00:00.483"/>
-    <entry producer="producer0" in="00:00:00.000" out="00:00:00.483"/>
-    <entry producer="chain1" in="00:00:00.000" out="00:48:28.933"/>
+    <entry producer="chain1" in="00:00:00.000" out="00:19:08.067"/>
   </playlist>
-  <producer id="black" in="00:00:00.000" out="00:48:22.450">
-    <property name="length">00:48:22.467</property>
+  <producer id="black" in="00:00:00.000" out="00:18:24.417">
+    <property name="length">00:18:24.433</property>
     <property name="eof">pause</property>
     <property name="resource">0</property>
     <property name="aspect_ratio">1</property>
@@ -175,12 +129,12 @@
     <property name="set.test_audio">0</property>
   </producer>
   <playlist id="background">
-    <entry producer="black" in="00:00:00.000" out="00:48:22.450"/>
+    <entry producer="black" in="00:00:00.000" out="00:18:24.417"/>
   </playlist>
   <chain id="chain2" out="00:00:05.717">
     <property name="length">00:00:05.733</property>
     <property name="eof">pause</property>
-    <property name="resource">LTD/Videos/raw/LTD_97/intro.mp4</property>
+    <property name="resource">intro.mp4</property>
     <property name="mlt_service">avformat-novalidate</property>
     <property name="meta.media.nb_streams">2</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -234,10 +188,10 @@
     <property name="meta.media.progressive">1</property>
     <property name="shotcut:caption">intro.mp4</property>
   </chain>
-  <chain id="chain3" out="00:48:28.933">
-    <property name="length">00:48:28.950</property>
+  <chain id="chain3" out="00:19:08.067">
+    <property name="length">00:19:08.083</property>
     <property name="eof">pause</property>
-    <property name="resource">LTD/Videos/raw/LTD_97/2024-05-18 20-25-09.mkv</property>
+    <property name="resource">2024-09-27 16-34-35.mkv</property>
     <property name="mlt_service">avformat-novalidate</property>
     <property name="meta.media.nb_streams">3</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -253,7 +207,7 @@
     <property name="meta.media.0.codec.name">h264</property>
     <property name="meta.media.0.codec.long_name">H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10</property>
     <property name="meta.media.0.codec.bit_rate">0</property>
-    <property name="meta.attr.0.stream.DURATION.markup">00:48:28.950000000</property>
+    <property name="meta.attr.0.stream.DURATION.markup">00:19:08.084000000</property>
     <property name="meta.media.1.stream.type">audio</property>
     <property name="meta.media.1.codec.sample_fmt">fltp</property>
     <property name="meta.media.1.codec.sample_rate">48000</property>
@@ -261,8 +215,8 @@
     <property name="meta.media.1.codec.name">aac</property>
     <property name="meta.media.1.codec.long_name">AAC (Advanced Audio Coding)</property>
     <property name="meta.media.1.codec.bit_rate">0</property>
-    <property name="meta.attr.1.stream.title.markup">MIC</property>
-    <property name="meta.attr.1.stream.DURATION.markup">00:48:28.885000000</property>
+    <property name="meta.attr.1.stream.title.markup">MIC (Mic)</property>
+    <property name="meta.attr.1.stream.DURATION.markup">00:19:08.010000000</property>
     <property name="meta.media.2.stream.type">audio</property>
     <property name="meta.media.2.codec.sample_fmt">fltp</property>
     <property name="meta.media.2.codec.sample_rate">48000</property>
@@ -270,15 +224,15 @@
     <property name="meta.media.2.codec.name">aac</property>
     <property name="meta.media.2.codec.long_name">AAC (Advanced Audio Coding)</property>
     <property name="meta.media.2.codec.bit_rate">0</property>
-    <property name="meta.attr.2.stream.title.markup">GAME</property>
-    <property name="meta.attr.2.stream.DURATION.markup">00:48:28.885000000</property>
+    <property name="meta.attr.2.stream.title.markup">GAME (Game)</property>
+    <property name="meta.attr.2.stream.DURATION.markup">00:19:08.010000000</property>
     <property name="meta.attr.ENCODER.markup">Lavf60.16.100</property>
     <property name="seekable">1</property>
     <property name="meta.media.sample_aspect_num">1</property>
     <property name="meta.media.sample_aspect_den">1</property>
     <property name="audio_index">-1</property>
     <property name="video_index">0</property>
-    <property name="creation_time">2024-05-18T19:13:39</property>
+    <property name="creation_time">2024-09-27T14:53:44</property>
     <property name="vstream">0</property>
     <property name="meta.media.frame_rate_num">60</property>
     <property name="meta.media.frame_rate_den">1</property>
@@ -291,10 +245,10 @@
     <property name="meta.media.color_range">mpeg</property>
     <property name="astream">-1</property>
     <property name="xml">was here</property>
-    <property name="shotcut:hash">09ccd4ff6b9958dd4f555676b2d1cd9c</property>
+    <property name="shotcut:hash">4f71c84443aeddfff59db97a3bd3d764</property>
     <property name="meta.media.top_field_first">0</property>
     <property name="meta.media.progressive">1</property>
-    <property name="shotcut:caption">2024-05-18 20-25-09.mkv</property>
+    <property name="shotcut:caption">2024-09-27 16-34-35.mkv</property>
     <property name="shotcut:defaultAudioIndex">1</property>
   </chain>
   <playlist id="playlist0">
@@ -302,12 +256,12 @@
     <property name="shotcut:name">V1</property>
     <property name="shotcut:lock">0</property>
     <entry producer="chain2" in="00:00:00.000" out="00:00:05.700"/>
-    <entry producer="chain3" in="00:00:12.200" out="00:48:28.933"/>
+    <entry producer="chain3" in="00:00:45.500" out="00:19:04.200"/>
   </playlist>
-  <chain id="chain4" out="00:48:28.933">
-    <property name="length">00:48:28.950</property>
+  <chain id="chain4" out="00:19:08.067">
+    <property name="length">00:19:08.083</property>
     <property name="eof">pause</property>
-    <property name="resource">LTD/Videos/raw/LTD_97/2024-05-18 20-25-09.mkv</property>
+    <property name="resource">2024-09-27 16-34-35.mkv</property>
     <property name="mlt_service">avformat-novalidate</property>
     <property name="meta.media.nb_streams">3</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -323,7 +277,7 @@
     <property name="meta.media.0.codec.name">h264</property>
     <property name="meta.media.0.codec.long_name">H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10</property>
     <property name="meta.media.0.codec.bit_rate">0</property>
-    <property name="meta.attr.0.stream.DURATION.markup">00:48:28.950000000</property>
+    <property name="meta.attr.0.stream.DURATION.markup">00:19:08.084000000</property>
     <property name="meta.media.1.stream.type">audio</property>
     <property name="meta.media.1.codec.sample_fmt">fltp</property>
     <property name="meta.media.1.codec.sample_rate">48000</property>
@@ -331,8 +285,8 @@
     <property name="meta.media.1.codec.name">aac</property>
     <property name="meta.media.1.codec.long_name">AAC (Advanced Audio Coding)</property>
     <property name="meta.media.1.codec.bit_rate">0</property>
-    <property name="meta.attr.1.stream.title.markup">MIC</property>
-    <property name="meta.attr.1.stream.DURATION.markup">00:48:28.885000000</property>
+    <property name="meta.attr.1.stream.title.markup">MIC (Mic)</property>
+    <property name="meta.attr.1.stream.DURATION.markup">00:19:08.010000000</property>
     <property name="meta.media.2.stream.type">audio</property>
     <property name="meta.media.2.codec.sample_fmt">fltp</property>
     <property name="meta.media.2.codec.sample_rate">48000</property>
@@ -340,15 +294,15 @@
     <property name="meta.media.2.codec.name">aac</property>
     <property name="meta.media.2.codec.long_name">AAC (Advanced Audio Coding)</property>
     <property name="meta.media.2.codec.bit_rate">0</property>
-    <property name="meta.attr.2.stream.title.markup">GAME</property>
-    <property name="meta.attr.2.stream.DURATION.markup">00:48:28.885000000</property>
+    <property name="meta.attr.2.stream.title.markup">GAME (Game)</property>
+    <property name="meta.attr.2.stream.DURATION.markup">00:19:08.010000000</property>
     <property name="meta.attr.ENCODER.markup">Lavf60.16.100</property>
     <property name="seekable">1</property>
     <property name="meta.media.sample_aspect_num">1</property>
     <property name="meta.media.sample_aspect_den">1</property>
     <property name="audio_index">1</property>
     <property name="video_index">-1</property>
-    <property name="creation_time">2024-05-18T19:13:39</property>
+    <property name="creation_time">2024-09-27T14:53:44</property>
     <property name="vstream">-1</property>
     <property name="meta.media.frame_rate_num">60</property>
     <property name="meta.media.frame_rate_den">1</property>
@@ -361,22 +315,22 @@
     <property name="meta.media.color_range">mpeg</property>
     <property name="astream">0</property>
     <property name="xml">was here</property>
-    <property name="shotcut:hash">09ccd4ff6b9958dd4f555676b2d1cd9c</property>
+    <property name="shotcut:hash">4f71c84443aeddfff59db97a3bd3d764</property>
     <property name="meta.media.top_field_first">0</property>
     <property name="meta.media.progressive">1</property>
-    <property name="shotcut:caption">2024-05-18 20-25-09.mkv</property>
+    <property name="shotcut:caption">2024-09-27 16-34-35.mkv</property>
     <property name="shotcut:defaultAudioIndex">1</property>
   </chain>
   <playlist id="playlist1">
     <property name="shotcut:audio">1</property>
     <property name="shotcut:name">A1</property>
     <blank length="00:00:05.717"/>
-    <entry producer="chain4" in="00:00:12.200" out="00:48:28.933"/>
+    <entry producer="chain4" in="00:00:45.500" out="00:19:04.200"/>
   </playlist>
-  <chain id="chain5" out="00:48:28.933">
-    <property name="length">00:48:28.950</property>
+  <chain id="chain5" out="00:19:08.067">
+    <property name="length">00:19:08.083</property>
     <property name="eof">pause</property>
-    <property name="resource">LTD/Videos/raw/LTD_97/2024-05-18 20-25-09.mkv</property>
+    <property name="resource">2024-09-27 16-34-35.mkv</property>
     <property name="mlt_service">avformat</property>
     <property name="meta.media.nb_streams">3</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -392,7 +346,7 @@
     <property name="meta.media.0.codec.name">h264</property>
     <property name="meta.media.0.codec.long_name">H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10</property>
     <property name="meta.media.0.codec.bit_rate">0</property>
-    <property name="meta.attr.0.stream.DURATION.markup">00:48:28.950000000</property>
+    <property name="meta.attr.0.stream.DURATION.markup">00:19:08.084000000</property>
     <property name="meta.media.1.stream.type">audio</property>
     <property name="meta.media.1.codec.sample_fmt">fltp</property>
     <property name="meta.media.1.codec.sample_rate">48000</property>
@@ -400,8 +354,8 @@
     <property name="meta.media.1.codec.name">aac</property>
     <property name="meta.media.1.codec.long_name">AAC (Advanced Audio Coding)</property>
     <property name="meta.media.1.codec.bit_rate">0</property>
-    <property name="meta.attr.1.stream.title.markup">MIC</property>
-    <property name="meta.attr.1.stream.DURATION.markup">00:48:28.885000000</property>
+    <property name="meta.attr.1.stream.title.markup">MIC (Mic)</property>
+    <property name="meta.attr.1.stream.DURATION.markup">00:19:08.010000000</property>
     <property name="meta.media.2.stream.type">audio</property>
     <property name="meta.media.2.codec.sample_fmt">fltp</property>
     <property name="meta.media.2.codec.sample_rate">48000</property>
@@ -409,8 +363,8 @@
     <property name="meta.media.2.codec.name">aac</property>
     <property name="meta.media.2.codec.long_name">AAC (Advanced Audio Coding)</property>
     <property name="meta.media.2.codec.bit_rate">0</property>
-    <property name="meta.attr.2.stream.title.markup">GAME</property>
-    <property name="meta.attr.2.stream.DURATION.markup">00:48:28.885000000</property>
+    <property name="meta.attr.2.stream.title.markup">GAME (Game)</property>
+    <property name="meta.attr.2.stream.DURATION.markup">00:19:08.010000000</property>
     <property name="meta.attr.ENCODER.markup">Lavf60.16.100</property>
     <property name="seekable">1</property>
     <property name="meta.media.sample_aspect_num">1</property>
@@ -429,22 +383,22 @@
     <property name="meta.media.color_range">mpeg</property>
     <property name="astream">1</property>
     <property name="video_delay">0</property>
-    <property name="shotcut:hash">09ccd4ff6b9958dd4f555676b2d1cd9c</property>
+    <property name="shotcut:hash">4f71c84443aeddfff59db97a3bd3d764</property>
     <property name="shotcut:defaultAudioIndex">1</property>
-    <property name="shotcut:caption">2024-05-18 20-25-09.mkv</property>
+    <property name="shotcut:caption">2024-09-27 16-34-35.mkv</property>
     <property name="shotcut:producer">avformat</property>
     <property name="xml">was here</property>
+    <filter id="filter0" in="00:00:45.500" out="00:19:04.200">
+      <property name="window">75</property>
+      <property name="max_gain">20dB</property>
+      <property name="level">15.4</property>
+      <property name="mlt_service">volume</property>
+    </filter>
   </chain>
-  <playlist id="playlist2">
-    <property name="shotcut:audio">1</property>
-    <property name="shotcut:name">A2</property>
-    <blank length="00:00:05.717"/>
-    <entry producer="chain5" in="00:00:12.200" out="00:48:28.933"/>
-  </playlist>
-  <producer in="00:00:00.000" out="03:59:59.983" id="producer9">
+  <producer in="00:00:00.000" out="03:59:59.983" id="producer1">
     <property name="length">04:00:00.000</property>
     <property name="eof">pause</property>
-    <property name="resource">LTD/assets/Units/infos/gg.png</property>
+    <property name="resource">C:/YouTube/LTD/assets/Units/infos/cava.png</property>
     <property name="ttl">1</property>
     <property name="aspect_ratio">1</property>
     <property name="meta.media.progressive">1</property>
@@ -453,110 +407,14 @@
     <property name="meta.media.width">1920</property>
     <property name="meta.media.height">1080</property>
     <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-13T16:54:18</property>
-    <property name="shotcut:hash">6ee1f944d4d378de3692ee81ebe03ca4</property>
-    <property name="shotcut:caption">gg.png</property>
-  </producer>
-  <producer in="00:00:00.000" out="03:59:59.983" id="producer8">
-    <property name="length">04:00:00.000</property>
-    <property name="eof">pause</property>
-    <property name="resource">LTD/assets/Units/infos/druid.png</property>
-    <property name="ttl">1</property>
-    <property name="aspect_ratio">1</property>
-    <property name="meta.media.progressive">1</property>
-    <property name="seekable">1</property>
-    <property name="format">2</property>
-    <property name="meta.media.width">1920</property>
-    <property name="meta.media.height">1080</property>
-    <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-13T16:54:18</property>
-    <property name="shotcut:hash">87b5e9b1da801b454501abd193f4e227</property>
-    <property name="shotcut:caption">druid.png</property>
-  </producer>
-  <producer in="00:00:00.000" out="03:59:59.983" id="producer7">
-    <property name="length">04:00:00.000</property>
-    <property name="eof">pause</property>
-    <property name="resource">LTD/assets/Units/infos/tot.png</property>
-    <property name="ttl">1</property>
-    <property name="aspect_ratio">1</property>
-    <property name="meta.media.progressive">1</property>
-    <property name="seekable">1</property>
-    <property name="format">2</property>
-    <property name="meta.media.width">1920</property>
-    <property name="meta.media.height">1080</property>
-    <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-13T16:54:18</property>
-    <property name="shotcut:hash">6e22b4c059af3b68ae89b1f95674275e</property>
-    <property name="shotcut:caption">tot.png</property>
-  </producer>
-  <producer in="00:00:00.000" out="03:59:59.983" id="producer6">
-    <property name="length">04:00:00.000</property>
-    <property name="eof">pause</property>
-    <property name="resource">LTD/assets/Units/infos/tuskar.png</property>
-    <property name="ttl">1</property>
-    <property name="aspect_ratio">1</property>
-    <property name="meta.media.progressive">1</property>
-    <property name="seekable">1</property>
-    <property name="format">2</property>
-    <property name="meta.media.width">1920</property>
-    <property name="meta.media.height">1080</property>
-    <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-13T16:54:18</property>
-    <property name="shotcut:hash">5c6be9e53160b76d7d3a9ee6f25d6ffa</property>
-    <property name="shotcut:caption">tuskar.png</property>
-  </producer>
-  <producer in="00:00:00.000" out="03:59:59.983" id="producer5">
-    <property name="length">04:00:00.000</property>
-    <property name="eof">pause</property>
-    <property name="resource">LTD/assets/Units/infos/MONK.png</property>
-    <property name="ttl">1</property>
-    <property name="aspect_ratio">1</property>
-    <property name="meta.media.progressive">1</property>
-    <property name="seekable">1</property>
-    <property name="format">2</property>
-    <property name="meta.media.width">1920</property>
-    <property name="meta.media.height">1080</property>
-    <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-13T16:54:18</property>
-    <property name="shotcut:hash">d20ef2d4dca870a7046174cb747e90d1</property>
-    <property name="shotcut:caption">MONK.png</property>
-  </producer>
-  <producer in="00:00:00.000" out="03:59:59.983" id="producer4">
-    <property name="length">04:00:00.000</property>
-    <property name="eof">pause</property>
-    <property name="resource">LTD/assets/Units/infos/AQUA.png</property>
-    <property name="ttl">1</property>
-    <property name="aspect_ratio">1</property>
-    <property name="meta.media.progressive">1</property>
-    <property name="seekable">1</property>
-    <property name="format">2</property>
-    <property name="meta.media.width">1920</property>
-    <property name="meta.media.height">1080</property>
-    <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-13T16:54:18</property>
-    <property name="shotcut:hash">af59e02e0231277349253065654fe08f</property>
-    <property name="shotcut:caption">AQUA.png</property>
-  </producer>
-  <producer in="00:00:00.000" out="03:59:59.983" id="producer3">
-    <property name="length">04:00:00.000</property>
-    <property name="eof">pause</property>
-    <property name="resource">LTD/assets/Units/infos/CAVA.png</property>
-    <property name="ttl">1</property>
-    <property name="aspect_ratio">1</property>
-    <property name="meta.media.progressive">1</property>
-    <property name="seekable">1</property>
-    <property name="format">2</property>
-    <property name="meta.media.width">1920</property>
-    <property name="meta.media.height">1080</property>
-    <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-13T16:54:18</property>
-    <property name="shotcut:hash">14d07c0964957b0c5332d258d7f15dc7</property>
-    <property name="shotcut:caption">CAVA.png</property>
+    <property name="creation_time">2024-12-13T19:26:49</property>
+    <property name="shotcut:hash">ded6246dbd274f3286d0466e0b79c437</property>
+    <property name="shotcut:caption">cava.png</property>
   </producer>
   <producer in="00:00:00.000" out="03:59:59.983" id="producer2">
     <property name="length">04:00:00.000</property>
     <property name="eof">pause</property>
-    <property name="resource">LTD/assets/Units/infos/DF.png</property>
+    <property name="resource">C:/YouTube/LTD/assets/Units/infos/df.png</property>
     <property name="ttl">1</property>
     <property name="aspect_ratio">1</property>
     <property name="meta.media.progressive">1</property>
@@ -565,63 +423,65 @@
     <property name="meta.media.width">1920</property>
     <property name="meta.media.height">1080</property>
     <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-13T16:54:18</property>
-    <property name="shotcut:hash">a49df9055dc85ddd03c76dade291610b</property>
-    <property name="shotcut:caption">DF.png</property>
+    <property name="creation_time">2024-12-13T19:26:49</property>
+    <property name="shotcut:hash">f546a5ee23fdaeef980cbb4a3c0d7c20</property>
+    <property name="shotcut:caption">df.png</property>
   </producer>
-  <tractor id="tractor2" title="Shotcut version 24.02.29" in="00:00:00.000" out="00:48:22.450">
+  <producer in="00:00:00.000" out="03:59:59.983" id="producer3">
+    <property name="length">04:00:00.000</property>
+    <property name="eof">pause</property>
+    <property name="resource">C:/YouTube/LTD/assets/Units/infos/monk.png</property>
+    <property name="ttl">1</property>
+    <property name="aspect_ratio">1</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="seekable">1</property>
+    <property name="format">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="mlt_service">qimage</property>
+    <property name="creation_time">2024-12-13T19:26:49</property>
+    <property name="shotcut:hash">5aefa55cb5d35568ac1aebd4c2755bbe</property>
+    <property name="shotcut:caption">monk.png</property>
+  </producer>
+  <playlist id="playlist2">
+    <property name="shotcut:audio">1</property>
+    <property name="shotcut:name">A2</property>
+    <blank length="00:00:05.717"/>
+    <entry producer="chain5" in="00:00:45.500" out="00:19:04.200"/>
+  </playlist>
+  <playlist id="playlist3">
+    <property name="shotcut:video">1</property>
+    <property name="shotcut:name">V3</property>
+    <blank length="00:01:09.117"/>
+    <entry in="00:00:00.000" out="00:00:00.483" producer="producer1"/>
+    <blank length="00:01:03.533"/>
+    <entry in="00:00:00.000" out="00:00:00.483" producer="producer2"/>
+    <blank length="00:07:18.882"/>
+    <entry in="00:00:00.000" out="00:00:00.483" producer="producer3"/>
+  </playlist>
+  <tractor id="tractor2" title="Shotcut version 24.02.29" in="00:00:00.000" out="00:18:24.417">
     <property name="shotcut">1</property>
     <property name="shotcut:projectAudioChannels">2</property>
     <property name="shotcut:projectFolder">1</property>
-    <property name="shotcut:scaleFactor">13.3221</property>
+    <property name="shotcut:scaleFactor">0.324432</property>
     <property name="shotcut:skipConvert">0</property>
     <properties name="shotcut:markers">
       <properties name="0">
-        <property name="text">DF</property>
-        <property name="start">00:08:33.067</property>
-        <property name="end">00:08:33.067</property>
-        <property name="color">#008000</property>
+        <property name="text">CAVA</property>
+        <property name="start">00:01:09.600</property>
+        <property name="end">00:01:09.600</property>
+        <property name="color">#80657C</property>
       </properties>
       <properties name="1">
-        <property name="text">CAVA</property>
-        <property name="start">00:12:45.367</property>
-        <property name="end">00:12:45.367</property>
-        <property name="color">#650280</property>
+        <property name="text">DF</property>
+        <property name="start">00:02:13.617</property>
+        <property name="end">00:02:13.617</property>
+        <property name="color">#80657C</property>
       </properties>
       <properties name="2">
-        <property name="text">AQUA</property>
-        <property name="start">00:21:14.200</property>
-        <property name="end">00:21:14.200</property>
-        <property name="color">#008000</property>
-      </properties>
-      <properties name="3">
-        <property name="text">MONK</property>
-        <property name="start">00:29:02.750</property>
-        <property name="end">00:29:02.750</property>
-        <property name="color">#008000</property>
-      </properties>
-      <properties name="4">
-        <property name="text">tuskar</property>
-        <property name="start">00:14:37.733</property>
-        <property name="end">00:14:37.733</property>
-        <property name="color">#FFAA00</property>
-      </properties>
-      <properties name="5">
-        <property name="text">tot</property>
-        <property name="start">00:31:46.000</property>
-        <property name="end">00:31:46.000</property>
-        <property name="color">#555007</property>
-      </properties>
-      <properties name="6">
-        <property name="text">druid</property>
-        <property name="start">00:04:58.933</property>
-        <property name="end">00:04:58.933</property>
-        <property name="color">#55FFFF</property>
-      </properties>
-      <properties name="7">
-        <property name="text">gg</property>
-        <property name="start">00:42:05.067</property>
-        <property name="end">00:42:05.067</property>
+        <property name="text">monk</property>
+        <property name="start">00:09:32.983</property>
+        <property name="end">00:09:32.983</property>
         <property name="color">#80657C</property>
       </properties>
     </properties>
@@ -629,6 +489,7 @@
     <track producer="playlist0"/>
     <track producer="playlist1" hide="video"/>
     <track producer="playlist2" hide="video"/>
+    <track producer="playlist3"/>
     <transition id="transition4">
       <property name="a_track">0</property>
       <property name="b_track">1</property>
@@ -646,17 +507,66 @@
     </transition>
     <transition id="transition0">
       <property name="a_track">0</property>
-      <property name="b_track">2</property>
+      <property name="b_track">3</property>
       <property name="mlt_service">mix</property>
       <property name="always_active">1</property>
       <property name="sum">1</property>
     </transition>
     <transition id="transition1">
       <property name="a_track">0</property>
-      <property name="b_track">3</property>
+      <property name="b_track">2</property>
       <property name="mlt_service">mix</property>
       <property name="always_active">1</property>
       <property name="sum">1</property>
     </transition>
   </tractor>
+  <transition id="transition6">
+    <property name="a_track">0</property>
+    <property name="b_track">4</property>
+    <property name="mlt_service">mix</property>
+    <property name="always_active">1</property>
+    <property name="sum">1</property>
+  </transition>
+  <transition id="transition7">
+    <property name="a_track">1</property>
+    <property name="b_track">2</property>
+    <property name="mlt_service">mix</property>
+    <property name="always_active">1</property>
+    <property name="sum">1</property>
+  </transition>
+  <transition id="transition8">
+    <property name="a_track">1</property>
+    <property name="b_track">3</property>
+    <property name="mlt_service">mix</property>
+    <property name="always_active">1</property>
+    <property name="sum">1</property>
+  </transition>
+  <transition id="transition9">
+    <property name="a_track">1</property>
+    <property name="b_track">4</property>
+    <property name="mlt_service">mix</property>
+    <property name="always_active">1</property>
+    <property name="sum">1</property>
+  </transition>
+  <transition id="transition10">
+    <property name="a_track">2</property>
+    <property name="b_track">3</property>
+    <property name="mlt_service">mix</property>
+    <property name="always_active">1</property>
+    <property name="sum">1</property>
+  </transition>
+  <transition id="transition11">
+    <property name="a_track">2</property>
+    <property name="b_track">4</property>
+    <property name="mlt_service">mix</property>
+    <property name="always_active">1</property>
+    <property name="sum">1</property>
+  </transition>
+  <transition id="transition12">
+    <property name="a_track">3</property>
+    <property name="b_track">4</property>
+    <property name="mlt_service">mix</property>
+    <property name="always_active">1</property>
+    <property name="sum">1</property>
+  </transition>
 </mlt>
