@@ -1,7 +1,12 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
+import tkinter as tk  # Import tkinter for `tk.END`
+from tkinter import messagebox
 import os
 import json
+import difflib
+from ttkbootstrap.scrolled import ScrolledText
+
 
 
 class ExportManager:
@@ -9,12 +14,54 @@ class ExportManager:
         self.parent = parent
 
         # Create the Export Manager window
-        self.window = ttk.Toplevel(parent, title="Export Manager")
+        self.window = ttk.Toplevel(parent)
+        self.window.title("Export Manager")
         self.window.geometry("2000x1200")
         self.config = self.load_config()
 
         # Set up the UI layout
         self.setup_ui()
+
+    def highlight_differences(self):
+        """Highlight differences between the original .mlt file and the output preview."""
+        mlt_file = self.config.get("shortcut", None)
+        if not mlt_file or not os.path.exists(mlt_file):
+            ttk.Messagebox.show_error("Error", "No valid .mlt file found in config.")
+            return
+
+        try:
+            # Read the original content
+            with open(mlt_file, "r", encoding="utf-8") as file:
+                original_content = file.readlines()
+
+            # Get the output preview content
+            output_content = self.output_mlt_text.get("1.0", "end").strip().splitlines()
+
+            # Use difflib to compare the two
+            differ = difflib.Differ()
+            diff_result = list(differ.compare(original_content, output_content))
+
+            # Clear the output text box
+            self.output_mlt_text.delete("1.0", "end")
+
+            # Display differences with highlights
+            for line in diff_result:
+                if line.startswith("+ "):  # Added lines
+                    self.output_mlt_text.insert("end", line + "\n", "added")
+                elif line.startswith("- "):  # Removed lines
+                    self.output_mlt_text.insert("end", line + "\n", "removed")
+                elif line.startswith("? "):  # Highlight line differences
+                    self.output_mlt_text.insert("end", line + "\n", "changed")
+                else:  # Unchanged lines
+                    self.output_mlt_text.insert("end", line + "\n")
+
+            # Configure tags for highlighting
+            self.output_mlt_text.tag_configure("added", background="lightgreen")
+            self.output_mlt_text.tag_configure("removed", background="lightcoral")
+            self.output_mlt_text.tag_configure("changed", background="yellow")
+
+        except Exception as e:
+            ttk.Messagebox.show_error("Error", f"Failed to highlight differences:\n{e}")
 
     def load_config(self):
         """Load configuration from config.json."""
@@ -59,6 +106,67 @@ class ExportManager:
         # Add buttons under the text boxes
         self.add_buttons(left_frame, right_frame)
 
+    def add_transitions(self):
+        """Add '1' to the end of the existing content in the output text box or the original .mlt file."""
+        # Check if there's content in the output text box
+        existing_output_content = self.output_mlt_text.get("1.0", tk.END).strip()
+
+        # If output text box has content, append '1' to it
+        if existing_output_content:
+            updated_content = existing_output_content.rstrip() + "\nadd_transitions"
+        else:
+            # Otherwise, load content from the .mlt file
+            mlt_file = self.config.get("shortcut", None)
+            if not mlt_file or not os.path.exists(mlt_file):
+                messagebox.showerror("Error", "No valid .mlt file found in config.")
+                return
+
+            try:
+                # Open the file and read its content
+                with open(mlt_file, "r", encoding="utf-8") as file:
+                    content = file.read()
+
+                # Append '1' to the file content
+                updated_content = content.rstrip() + "\nadd_transitions"
+
+            except Exception as e:
+                messagebox.showerror("Error", f"An error occurred while adding transitions:\n{e}")
+                return
+
+        # Display the updated content in the Output Preview
+        self.load_output_preview(updated_content)
+
+    def add_pictures(self):
+        """Add 'PictureAdded' to the end of the existing content in the output text box or the original .mlt file."""
+        # Check if there's content in the output text box
+        existing_output_content = self.output_mlt_text.get("1.0", tk.END).strip()
+
+        # If output text box has content, append 'PictureAdded' to it
+        if existing_output_content:
+            updated_content = existing_output_content.rstrip() + "\nadd_pictures"
+        else:
+            # Otherwise, load content from the .mlt file
+            mlt_file = self.config.get("shortcut", None)
+            if not mlt_file or not os.path.exists(mlt_file):
+                messagebox.showerror("Error", "No valid .mlt file found in config.")
+                return
+
+            try:
+                # Open the file and read its content
+                with open(mlt_file, "r", encoding="utf-8") as file:
+                    content = file.read()
+
+                # Append 'PictureAdded' to the file content
+                updated_content = content.rstrip() + "\nadd_pictures"
+
+            except Exception as e:
+                messagebox.showerror("Error", f"An error occurred while adding pictures:\n{e}")
+                return
+
+        # Display the updated content in the Output Preview
+        self.load_output_preview(updated_content)
+
+
     def add_buttons(self, left_frame, right_frame):
         """Add buttons under the textboxes."""
         # Button frame for the left side
@@ -68,7 +176,7 @@ class ExportManager:
         # Add buttons for the left side
         ttk.Button(left_button_frame, text="Add Transitions", bootstyle="primary", command=self.add_transitions).pack(side="left", expand=True, padx=5)
         ttk.Button(left_button_frame, text="Add Pictures", bootstyle="secondary", command=self.add_pictures).pack(side="left", expand=True, padx=5)
-        ttk.Button(left_button_frame, text="Button 3", bootstyle="info", command=lambda: self.show_message("I'm here from Button 3")).pack(side="left", expand=True, padx=5)
+        ttk.Button(left_button_frame, text="Highlight Differences", bootstyle="info", command=self.highlight_differences).pack(side="left", expand=True, padx=5)
 
         # Button frame for the right side
         right_button_frame = ttk.Frame(right_frame)

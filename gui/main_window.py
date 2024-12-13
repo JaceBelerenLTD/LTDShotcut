@@ -10,6 +10,9 @@ from Services.media_handler import MediaHandler
 from gui.components import ImageViewer, VideoPlayer
 from resources.styles import BACKGROUND_COLOR
 from gui.export_manager import ExportManager
+from gui.settings_window import SettingsWindow
+
+
 
 
 class MainWindow:
@@ -571,8 +574,8 @@ class MainWindow:
                 self.set_background_image(selected_image)  # Update the background immediately
 
         from gui.settings_window import SettingsWindow
-        SettingsWindow(self.root, save_background_image)
-        self.child_windows.append(settings_window.window)
+        settings_window = SettingsWindow(self.root, save_background_image)
+        self.child_windows.append(settings_window.window) 
 
 
 
