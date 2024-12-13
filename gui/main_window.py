@@ -279,43 +279,51 @@ class MainWindow:
 
     def add_image_to_marker(self):
         """
-        Add the current loaded image's filename to the selected marker row.
+        Add the current loaded image's full path to the selected marker and display its file name in the grid.
         """
         selected_item = self.marker_tree.focus()  # Get the selected row
         if selected_item:
-            # Get the current image file name
+            # Get the current image file path
             if "image" in self.last_opened_files and self.last_opened_files["image"]:
-                image_filename = os.path.basename(self.last_opened_files["image"])
+                full_image_path = self.last_opened_files["image"]  # Full path
+                image_filename = os.path.basename(full_image_path)  # Extract the file name
+
                 # Update the grid's Picture column for the selected row
                 values = self.marker_tree.item(selected_item, "values")
                 updated_values = list(values)
                 updated_values[3] = image_filename  # Picture column is the 4th column (index 3)
                 self.marker_tree.item(selected_item, values=updated_values)
+
                 # Update the corresponding entry in self.markers
                 selected_index = self.marker_tree.index(selected_item)
-                self.markers[selected_index]["Picture"] = image_filename
+                self.markers[selected_index]["Picture"] = full_image_path  # Store the full path
             else:
                 print("No image loaded to add.")
 
+
     def add_video_to_marker(self):
         """
-        Add the current loaded video's filename to the selected marker row.
+        Add the current loaded video's full path to the selected marker and display its file name in the grid.
         """
         selected_item = self.marker_tree.focus()  # Get the selected row
         if selected_item:
-            # Get the current video file name
+            # Get the current video file path
             if "video" in self.last_opened_files and self.last_opened_files["video"]:
-                video_filename = os.path.basename(self.last_opened_files["video"])
+                full_video_path = self.last_opened_files["video"]  # Full path
+                video_filename = os.path.basename(full_video_path)  # Extract the file name
+
                 # Update the grid's Video column for the selected row
                 values = self.marker_tree.item(selected_item, "values")
                 updated_values = list(values)
                 updated_values[4] = video_filename  # Video column is the 5th column (index 4)
                 self.marker_tree.item(selected_item, values=updated_values)
+
                 # Update the corresponding entry in self.markers
                 selected_index = self.marker_tree.index(selected_item)
-                self.markers[selected_index]["Video"] = video_filename
+                self.markers[selected_index]["Video"] = full_video_path  # Store the full path
             else:
                 print("No video loaded to add.")
+
     
     def auto_assign_files(self, file_types, column_index, file_key, dialog_title):
         """
@@ -347,16 +355,15 @@ class MainWindow:
                     file_name = f"{marker_name.strip()}{ext}"  # Ensure no extra spaces in the file name
                     for file in files:
                         if file.lower() == file_name.lower():  # Case-insensitive match
-                            file_path = os.path.join(root, file)
+                            full_file_path = os.path.join(root, file)  # Full path to the file
 
-                            # Update the marker
-                            marker[file_key] = os.path.basename(file_path)
-                            self.last_opened_files[file_key.lower()] = file_path
+                            # Update the marker with the full path
+                            marker[file_key] = full_file_path
 
-                            # Update the grid column
+                            # Update the grid column with the file name only
                             selected_item = self.marker_tree.get_children()[index]
                             current_values = list(self.marker_tree.item(selected_item, "values"))
-                            current_values[column_index] = marker[file_key]
+                            current_values[column_index] = os.path.basename(full_file_path)  # Display only file name
                             self.marker_tree.item(selected_item, values=current_values)
 
                             found = True
@@ -370,6 +377,7 @@ class MainWindow:
                 print(f"No matching file found for marker '{marker_name}'.")
 
         print(f"Completed recursive auto-assign for {file_key}.")
+
 
 
     def load_image(self):
@@ -550,6 +558,10 @@ class MainWindow:
                 self.marker_tree.tag_configure(tag_name, background=marker_color)
                 configured_tags.add(tag_name)
 
+            # Extract file names for Picture and Video columns
+            picture_filename = os.path.basename(marker.get("Picture", "")) if marker.get("Picture") else ""
+            video_filename = os.path.basename(marker.get("Video", "")) if marker.get("Video") else ""
+
             # Insert the marker with the tag
             self.marker_tree.insert(
                 "",
@@ -558,11 +570,12 @@ class MainWindow:
                     marker["Number"],
                     marker["Name"],
                     marker["StartTime"],
-                    marker.get("Picture", ""),
-                    marker.get("Video", "")
+                    picture_filename,  # Display only the file name
+                    video_filename  # Display only the file name
                 ),
                 tags=(tag_name,)
             )
+
 
 
     def open_settings(self):

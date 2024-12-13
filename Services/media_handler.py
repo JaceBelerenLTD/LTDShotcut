@@ -68,7 +68,6 @@ class MediaHandler:
                 marker = {
                     "Number": index + 1,
                     "Name": marker_element.find("property[@name='text']").text,
-                    #"Time": marker_element.find("property[@name='start']").text,
                     "StartTime": marker_element.find("property[@name='start']").text,
                     "EndTime": marker_element.find("property[@name='end']").text if marker_element.find("property[@name='end']") is not None else "",
                     "Color": marker_element.find("property[@name='color']").text,
