@@ -212,7 +212,7 @@ class MainWindow:
 
     def start_export_manager(self):
         from gui.export_manager import ExportManager
-        export_window = ExportManager(self.root)
+        export_window = ExportManager(self.root, self.markers)
         self.child_windows.append(export_window.window)
 
     def auto_assign_images(self):

@@ -5,63 +5,75 @@ from tkinter import messagebox
 import os
 import json
 import difflib
-from ttkbootstrap.scrolled import ScrolledText
-
-
 
 class ExportManager:
-    def __init__(self, parent):
+    def __init__(self, parent, markers):
         self.parent = parent
+        self.markers = markers
 
         # Create the Export Manager window
         self.window = ttk.Toplevel(parent)
         self.window.title("Export Manager")
         self.window.geometry("2000x1200")
         self.config = self.load_config()
+        self.debug_markers()
 
         # Set up the UI layout
         self.setup_ui()
+
+    def debug_markers(self):
+        """Display debug information about the markers."""
+        if not self.markers:
+            print("Debug: No markers loaded.")
+        else:
+            print(f"Debug: {len(self.markers)} markers loaded.")
+            for index, marker in enumerate(self.markers):
+                print(f"Marker {index + 1}: {marker}")
 
     def highlight_differences(self):
         """Highlight differences between the original .mlt file and the output preview."""
         mlt_file = self.config.get("shortcut", None)
         if not mlt_file or not os.path.exists(mlt_file):
-            ttk.Messagebox.show_error("Error", "No valid .mlt file found in config.")
+            messagebox.showerror("Error", "No valid .mlt file found in config.")
             return
 
         try:
             # Read the original content
             with open(mlt_file, "r", encoding="utf-8") as file:
-                original_content = file.readlines()
+                original_content = [line.strip() for line in file.readlines()]  # Strip whitespace
 
             # Get the output preview content
-            output_content = self.output_mlt_text.get("1.0", "end").strip().splitlines()
+            output_content = [
+                line.strip() for line in self.output_mlt_text.get("1.0", "end").splitlines()
+            ]  # Strip whitespace
 
-            # Use difflib to compare the two
-            differ = difflib.Differ()
-            diff_result = list(differ.compare(original_content, output_content))
+            # Clear existing tags in both text widgets
+            self.current_mlt_text.tag_delete("diff")
+            self.output_mlt_text.tag_delete("diff")
 
-            # Clear the output text box
-            self.output_mlt_text.delete("1.0", "end")
+            # Compare the files line by line using difflib
+            matcher = difflib.SequenceMatcher(None, original_content, output_content)
+            for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+                if tag == "replace":  # Lines that differ
+                    for i in range(i1, i2):
+                        self.current_mlt_text.tag_add("diff", f"{i + 1}.0", f"{i + 1}.end")
+                    for j in range(j1, j2):
+                        self.output_mlt_text.tag_add("diff", f"{j + 1}.0", f"{j + 1}.end")
+                elif tag == "delete":  # Lines deleted from the original
+                    for i in range(i1, i2):
+                        self.current_mlt_text.tag_add("diff", f"{i + 1}.0", f"{i + 1}.end")
+                elif tag == "insert":  # Lines added to the output
+                    for j in range(j1, j2):
+                        self.output_mlt_text.tag_add("diff", f"{j + 1}.0", f"{j + 1}.end")
 
-            # Display differences with highlights
-            for line in diff_result:
-                if line.startswith("+ "):  # Added lines
-                    self.output_mlt_text.insert("end", line + "\n", "added")
-                elif line.startswith("- "):  # Removed lines
-                    self.output_mlt_text.insert("end", line + "\n", "removed")
-                elif line.startswith("? "):  # Highlight line differences
-                    self.output_mlt_text.insert("end", line + "\n", "changed")
-                else:  # Unchanged lines
-                    self.output_mlt_text.insert("end", line + "\n")
-
-            # Configure tags for highlighting
-            self.output_mlt_text.tag_configure("added", background="lightgreen")
-            self.output_mlt_text.tag_configure("removed", background="lightcoral")
-            self.output_mlt_text.tag_configure("changed", background="yellow")
+            # Configure the highlight tag
+            self.current_mlt_text.tag_configure("diff", background="lightcoral")
+            self.output_mlt_text.tag_configure("diff", background="lightgreen")
 
         except Exception as e:
-            ttk.Messagebox.show_error("Error", f"Failed to highlight differences:\n{e}")
+            messagebox.showerror("Error", f"Failed to highlight differences:\n{e}")
+
+
 
     def load_config(self):
         """Load configuration from config.json."""
@@ -189,7 +201,7 @@ class ExportManager:
 
     def show_message(self, message):
         """Display a simple message box."""
-        ttk.Messagebox.show_info(title="Message", message=message)
+        messagebox.showinfo(title="Message", message=message)
 
     def load_current_mlt(self):
         """Load the content of the current .mlt file into the left panel."""
@@ -213,13 +225,13 @@ class ExportManager:
         """Export the output preview content to the export folder."""
         export_folder = self.config.get("export_folder", None)
         if not export_folder or not os.path.exists(export_folder):
-            ttk.Messagebox.show_error("Export Error", "Export folder is not set or does not exist.")
+            messagebox.showerror("Export Error", "Export folder is not set or does not exist.")
             return
 
         # Get the content of the output preview
         output_content = self.output_mlt_text.get("1.0", ttk.END).strip()
         if not output_content:
-            ttk.Messagebox.show_error("Export Error", "Output content is empty.")
+            messagebox.showerror("Export Error", "Output content is empty.")
             return
 
         # Define the export file path
@@ -227,9 +239,9 @@ class ExportManager:
         try:
             with open(export_file_path, "w", encoding="utf-8") as file:
                 file.write(output_content)
-            ttk.Messagebox.show_info("Export Successful", f"File successfully exported to:\n{export_file_path}")
+            messagebox.showinfo("Export Successful", f"File successfully exported to:\n{export_file_path}")
         except Exception as e:
-            ttk.Messagebox.show_error("Export Error", f"Failed to export the file:\n{e}")
+            messagebox.showerror("Export Error", f"Failed to export the file:\n{e}")
 
 
 if __name__ == "__main__":
