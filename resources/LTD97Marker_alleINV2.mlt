@@ -4,7 +4,7 @@
   <chain id="chain0" out="00:00:05.717">
     <property name="length">00:00:05.733</property>
     <property name="eof">pause</property>
-    <property name="resource">intro.mp4</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/intro.mp4</property>
     <property name="mlt_service">avformat-novalidate</property>
     <property name="meta.media.nb_streams">2</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -58,7 +58,7 @@
   <producer id="producer1" in="00:00:00.000" out="03:59:59.983">
     <property name="length">04:00:00.000</property>
     <property name="eof">pause</property>
-    <property name="resource">grid.png</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/grid.png</property>
     <property name="ttl">1</property>
     <property name="aspect_ratio">1</property>
     <property name="meta.media.progressive">1</property>
@@ -86,7 +86,7 @@
   <producer id="producer0" in="00:00:00.000" out="03:59:59.983">
     <property name="length">04:00:00.000</property>
     <property name="eof">pause</property>
-    <property name="resource">rahmen.png</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/rahmen.png</property>
     <property name="ttl">1</property>
     <property name="aspect_ratio">1</property>
     <property name="meta.media.progressive">1</property>
@@ -102,7 +102,7 @@
   <chain id="chain1" out="00:48:28.933">
     <property name="length">00:48:28.950</property>
     <property name="eof">pause</property>
-    <property name="resource">2024-05-18 20-25-09.mkv</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/2024-05-18 20-25-09.mkv</property>
     <property name="mlt_service">avformat-novalidate</property>
     <property name="meta.media.nb_streams">3</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -180,7 +180,7 @@
   <chain id="chain2" out="00:00:05.717">
     <property name="length">00:00:05.733</property>
     <property name="eof">pause</property>
-    <property name="resource">intro.mp4</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/intro.mp4</property>
     <property name="mlt_service">avformat-novalidate</property>
     <property name="meta.media.nb_streams">2</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -237,7 +237,7 @@
   <chain id="chain3" out="00:48:28.933">
     <property name="length">00:48:28.950</property>
     <property name="eof">pause</property>
-    <property name="resource">2024-05-18 20-25-09.mkv</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/2024-05-18 20-25-09.mkv</property>
     <property name="mlt_service">avformat-novalidate</property>
     <property name="meta.media.nb_streams">3</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -307,7 +307,7 @@
   <chain id="chain4" out="00:48:28.933">
     <property name="length">00:48:28.950</property>
     <property name="eof">pause</property>
-    <property name="resource">2024-05-18 20-25-09.mkv</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/2024-05-18 20-25-09.mkv</property>
     <property name="mlt_service">avformat-novalidate</property>
     <property name="meta.media.nb_streams">3</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -376,7 +376,7 @@
   <chain id="chain5" out="00:48:28.933">
     <property name="length">00:48:28.950</property>
     <property name="eof">pause</property>
-    <property name="resource">2024-05-18 20-25-09.mkv</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/2024-05-18 20-25-09.mkv</property>
     <property name="mlt_service">avformat</property>
     <property name="meta.media.nb_streams">3</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -441,11 +441,159 @@
     <blank length="00:00:05.717"/>
     <entry producer="chain5" in="00:00:12.200" out="00:48:28.933"/>
   </playlist>
+  <producer id="producer2" in="00:00:00.000" out="03:59:59.983">
+    <property name="length">04:00:00.000</property>
+    <property name="eof">pause</property>
+    <property name="resource">LTD/assets/Units/infos/druid.png</property>
+    <property name="ttl">1</property>
+    <property name="aspect_ratio">1</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="seekable">1</property>
+    <property name="format">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="mlt_service">qimage</property>
+    <property name="creation_time">2024-03-03T11:18:21</property>
+    <property name="shotcut:hash">94948aa4ff373d7f6f1d206968cc7ebe</property>
+    <property name="shotcut:caption">druid.png</property>
+  </producer>
+  <producer id="producer3" in="00:00:00.000" out="03:59:59.983">
+    <property name="length">04:00:00.000</property>
+    <property name="eof">pause</property>
+    <property name="resource">LTD/assets/Units/infos/df.png</property>
+    <property name="ttl">1</property>
+    <property name="aspect_ratio">1</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="seekable">1</property>
+    <property name="format">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="mlt_service">qimage</property>
+    <property name="creation_time">2024-01-09T17:34:52</property>
+    <property name="shotcut:hash">878d07798cce36d9eff101e04d5d2a1f</property>
+    <property name="shotcut:caption">df.png</property>
+  </producer>
+  <producer id="producer4" in="00:00:00.000" out="03:59:59.983">
+    <property name="length">04:00:00.000</property>
+    <property name="eof">pause</property>
+    <property name="resource">LTD/assets/Units/infos/cava.png</property>
+    <property name="ttl">1</property>
+    <property name="aspect_ratio">1</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="seekable">1</property>
+    <property name="format">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="mlt_service">qimage</property>
+    <property name="creation_time">2024-02-14T17:53:09</property>
+    <property name="shotcut:hash">6b997420974b8f27421689de4fe445e7</property>
+    <property name="shotcut:caption">cava.png</property>
+  </producer>
+  <producer id="producer5" in="00:00:00.000" out="03:59:59.983">
+    <property name="length">04:00:00.000</property>
+    <property name="eof">pause</property>
+    <property name="resource">LTD/assets/Units/infos/tuskar.png</property>
+    <property name="ttl">1</property>
+    <property name="aspect_ratio">1</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="seekable">1</property>
+    <property name="format">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="mlt_service">qimage</property>
+    <property name="creation_time">2024-01-07T16:58:10</property>
+    <property name="shotcut:hash">6ce5a43a0582eb786e408b5723a2637a</property>
+    <property name="shotcut:caption">tuskar.png</property>
+  </producer>
+  <producer id="producer6" in="00:00:00.000" out="03:59:59.983">
+    <property name="length">04:00:00.000</property>
+    <property name="eof">pause</property>
+    <property name="resource">LTD/assets/Units/infos/aqua.png</property>
+    <property name="ttl">1</property>
+    <property name="aspect_ratio">1</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="seekable">1</property>
+    <property name="format">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="mlt_service">qimage</property>
+    <property name="creation_time">2024-01-07T11:06:01</property>
+    <property name="shotcut:hash">2e1242dd924987a868e6339ddf29eb29</property>
+    <property name="shotcut:caption">aqua.png</property>
+  </producer>
+  <producer id="producer7" in="00:00:00.000" out="03:59:59.983">
+    <property name="length">04:00:00.000</property>
+    <property name="eof">pause</property>
+    <property name="resource">LTD/assets/Units/infos/monk.png</property>
+    <property name="ttl">1</property>
+    <property name="aspect_ratio">1</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="seekable">1</property>
+    <property name="format">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="mlt_service">qimage</property>
+    <property name="creation_time">2024-02-15T14:52:56</property>
+    <property name="shotcut:hash">3af679aa425f57be2b3e59e662dff98b</property>
+    <property name="shotcut:caption">monk.png</property>
+  </producer>
+  <producer id="producer8" in="00:00:00.000" out="03:59:59.983">
+    <property name="length">04:00:00.000</property>
+    <property name="eof">pause</property>
+    <property name="resource">LTD/assets/Units/infos/tot.png</property>
+    <property name="ttl">1</property>
+    <property name="aspect_ratio">1</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="seekable">1</property>
+    <property name="format">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="mlt_service">qimage</property>
+    <property name="creation_time">2024-03-18T20:36:42</property>
+    <property name="shotcut:hash">1c1ce7a21860ceb711baddb5726d2d7a</property>
+    <property name="shotcut:caption">tot.png</property>
+  </producer>
+  <producer id="producer9" in="00:00:00.000" out="03:59:59.983">
+    <property name="length">04:00:00.000</property>
+    <property name="eof">pause</property>
+    <property name="resource">LTD/assets/Units/infos/gg.png</property>
+    <property name="ttl">1</property>
+    <property name="aspect_ratio">1</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="seekable">1</property>
+    <property name="format">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="mlt_service">qimage</property>
+    <property name="creation_time">2024-02-14T17:35:32</property>
+    <property name="shotcut:hash">1cdbcc44b5de2613499c74c20d79eebf</property>
+    <property name="shotcut:caption">gg.png</property>
+  </producer>
+  <playlist id="playlist3">
+    <property name="shotcut:video">1</property>
+    <property name="shotcut:name">V2</property>
+    <blank length="00:04:58.933"/>
+    <entry producer="producer2" in="00:00:00.000" out="00:00:00.483"/>
+    <blank length="00:03:33.633"/>
+    <entry producer="producer3" in="00:00:00.000" out="00:00:00.483"/>
+    <blank length="00:04:11.800"/>
+    <entry producer="producer4" in="00:00:00.000" out="00:00:00.483"/>
+    <blank length="00:01:51.867"/>
+    <entry producer="producer5" in="00:00:00.000" out="00:00:00.483"/>
+    <blank length="00:06:35.967"/>
+    <entry producer="producer6" in="00:00:00.000" out="00:00:00.483"/>
+    <blank length="00:07:48.050"/>
+    <entry producer="producer7" in="00:00:00.000" out="00:00:00.483"/>
+    <blank length="00:02:42.750"/>
+    <entry producer="producer8" in="00:00:00.000" out="00:00:00.483"/>
+    <blank length="00:10:18.567"/>
+    <entry producer="producer9" in="00:00:00.000" out="00:00:00.483"/>
+  </playlist>
   <tractor id="tractor2" title="Shotcut version 24.02.29" in="00:00:00.000" out="00:48:22.450">
     <property name="shotcut">1</property>
     <property name="shotcut:projectAudioChannels">2</property>
     <property name="shotcut:projectFolder">1</property>
-    <property name="shotcut:scaleFactor">13.3221</property>
+    <property name="shotcut:scaleFactor">1.07121</property>
     <property name="shotcut:skipConvert">0</property>
     <properties name="shotcut:markers">
       <properties name="0">
@@ -458,7 +606,7 @@
         <property name="text">CAVA</property>
         <property name="start">00:12:45.367</property>
         <property name="end">00:12:45.367</property>
-        <property name="color">#008000</property>
+        <property name="color">#650280</property>
       </properties>
       <properties name="2">
         <property name="text">AQUA</property>
@@ -472,11 +620,36 @@
         <property name="end">00:29:02.750</property>
         <property name="color">#008000</property>
       </properties>
+      <properties name="4">
+        <property name="text">tuskar</property>
+        <property name="start">00:14:37.733</property>
+        <property name="end">00:14:37.733</property>
+        <property name="color">#FFAA00</property>
+      </properties>
+      <properties name="5">
+        <property name="text">tot</property>
+        <property name="start">00:31:46.000</property>
+        <property name="end">00:31:46.000</property>
+        <property name="color">#555007</property>
+      </properties>
+      <properties name="6">
+        <property name="text">druid</property>
+        <property name="start">00:04:58.933</property>
+        <property name="end">00:04:58.933</property>
+        <property name="color">#55FFFF</property>
+      </properties>
+      <properties name="7">
+        <property name="text">gg</property>
+        <property name="start">00:42:05.067</property>
+        <property name="end">00:42:05.067</property>
+        <property name="color">#80657C</property>
+      </properties>
     </properties>
     <track producer="background"/>
     <track producer="playlist0"/>
     <track producer="playlist1" hide="video"/>
     <track producer="playlist2" hide="video"/>
+    <track producer="playlist3"/>
     <transition id="transition4">
       <property name="a_track">0</property>
       <property name="b_track">1</property>
@@ -505,6 +678,21 @@
       <property name="mlt_service">mix</property>
       <property name="always_active">1</property>
       <property name="sum">1</property>
+    </transition>
+    <transition id="transition2">
+      <property name="a_track">0</property>
+      <property name="b_track">4</property>
+      <property name="mlt_service">mix</property>
+      <property name="always_active">1</property>
+      <property name="sum">1</property>
+    </transition>
+    <transition id="transition3">
+      <property name="a_track">1</property>
+      <property name="b_track">4</property>
+      <property name="version">0.1</property>
+      <property name="mlt_service">frei0r.cairoblend</property>
+      <property name="threads">0</property>
+      <property name="disable">0</property>
     </transition>
   </tractor>
 </mlt>

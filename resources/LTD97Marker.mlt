@@ -1,10 +1,10 @@
-<?xml version="1.0" standalone="no"?>
-<mlt LC_NUMERIC="C" version="7.23.0" title="Shotcut version 24.02.29" producer="main_bin">
+<?xml version="1.0" encoding="UTF-8"?>
+<mlt LC_NUMERIC="C" title="Shotcut version 24.02.29" producer="main_bin">
   <profile description="automatic" width="1920" height="1080" progressive="1" sample_aspect_num="1" sample_aspect_den="1" display_aspect_num="16" display_aspect_den="9" frame_rate_num="60" frame_rate_den="1" colorspace="709"/>
   <chain id="chain0" out="00:00:05.717">
     <property name="length">00:00:05.733</property>
     <property name="eof">pause</property>
-    <property name="resource">intro.mp4</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/intro.mp4</property>
     <property name="mlt_service">avformat-novalidate</property>
     <property name="meta.media.nb_streams">2</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -58,7 +58,7 @@
   <producer id="producer1" in="00:00:00.000" out="03:59:59.983">
     <property name="length">04:00:00.000</property>
     <property name="eof">pause</property>
-    <property name="resource">grid.png</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/grid.png</property>
     <property name="ttl">1</property>
     <property name="aspect_ratio">1</property>
     <property name="meta.media.progressive">1</property>
@@ -86,7 +86,7 @@
   <producer id="producer0" in="00:00:00.000" out="03:59:59.983">
     <property name="length">04:00:00.000</property>
     <property name="eof">pause</property>
-    <property name="resource">rahmen.png</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/rahmen.png</property>
     <property name="ttl">1</property>
     <property name="aspect_ratio">1</property>
     <property name="meta.media.progressive">1</property>
@@ -102,7 +102,7 @@
   <chain id="chain1" out="00:48:28.933">
     <property name="length">00:48:28.950</property>
     <property name="eof">pause</property>
-    <property name="resource">2024-05-18 20-25-09.mkv</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/2024-05-18 20-25-09.mkv</property>
     <property name="mlt_service">avformat-novalidate</property>
     <property name="meta.media.nb_streams">3</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -180,7 +180,7 @@
   <chain id="chain2" out="00:00:05.717">
     <property name="length">00:00:05.733</property>
     <property name="eof">pause</property>
-    <property name="resource">intro.mp4</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/intro.mp4</property>
     <property name="mlt_service">avformat-novalidate</property>
     <property name="meta.media.nb_streams">2</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -237,7 +237,7 @@
   <chain id="chain3" out="00:48:28.933">
     <property name="length">00:48:28.950</property>
     <property name="eof">pause</property>
-    <property name="resource">2024-05-18 20-25-09.mkv</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/2024-05-18 20-25-09.mkv</property>
     <property name="mlt_service">avformat-novalidate</property>
     <property name="meta.media.nb_streams">3</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -307,7 +307,7 @@
   <chain id="chain4" out="00:48:28.933">
     <property name="length">00:48:28.950</property>
     <property name="eof">pause</property>
-    <property name="resource">2024-05-18 20-25-09.mkv</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/2024-05-18 20-25-09.mkv</property>
     <property name="mlt_service">avformat-novalidate</property>
     <property name="meta.media.nb_streams">3</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -376,7 +376,7 @@
   <chain id="chain5" out="00:48:28.933">
     <property name="length">00:48:28.950</property>
     <property name="eof">pause</property>
-    <property name="resource">2024-05-18 20-25-09.mkv</property>
+    <property name="resource">LTD/Videos/raw/LTD_97/2024-05-18 20-25-09.mkv</property>
     <property name="mlt_service">avformat</property>
     <property name="meta.media.nb_streams">3</property>
     <property name="meta.media.0.stream.type">video</property>
@@ -532,3 +532,4 @@
     </transition>
   </tractor>
 </mlt>
+
