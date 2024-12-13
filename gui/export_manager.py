@@ -5,6 +5,10 @@ from tkinter import messagebox
 import os
 import json
 import difflib
+import xml.etree.ElementTree as ET
+import hashlib
+from datetime import datetime
+from xml.dom import minidom
 
 class ExportManager:
     def __init__(self, parent, markers):
@@ -73,7 +77,7 @@ class ExportManager:
         except Exception as e:
             messagebox.showerror("Error", f"Failed to highlight differences:\n{e}")
 
-
+    
 
     def load_config(self):
         """Load configuration from config.json."""
@@ -148,37 +152,91 @@ class ExportManager:
         # Display the updated content in the Output Preview
         self.load_output_preview(updated_content)
 
-    def add_pictures(self):
-        """Add 'PictureAdded' to the end of the existing content in the output text box or the original .mlt file."""
-        # Check if there's content in the output text box
-        existing_output_content = self.output_mlt_text.get("1.0", tk.END).strip()
+    def add_producer(self):
+        """Add producers for each marker in the .mlt file."""
+        # Load the .mlt file path from the configuration
+        mlt_file = self.config.get("shortcut", None)
+        if not mlt_file or not os.path.exists(mlt_file):
+            print("Error: No valid .mlt file found in config.")
+            return
 
-        # If output text box has content, append 'PictureAdded' to it
-        if existing_output_content:
-            updated_content = existing_output_content.rstrip() + "\nadd_pictures"
-        else:
-            # Otherwise, load content from the .mlt file
-            mlt_file = self.config.get("shortcut", None)
-            if not mlt_file or not os.path.exists(mlt_file):
-                messagebox.showerror("Error", "No valid .mlt file found in config.")
-                return
+        # Read the .mlt file
+        with open(mlt_file, "r", encoding="utf-8") as file:
+            content = file.read()
 
-            try:
-                # Open the file and read its content
-                with open(mlt_file, "r", encoding="utf-8") as file:
-                    content = file.read()
+        # Parse the .mlt file as XML
+        root = ET.fromstring(content)
 
-                # Append 'PictureAdded' to the file content
-                updated_content = content.rstrip() + "\nadd_pictures"
+        # Find the current highest producer number
+        highest_producer_id = 0
+        for producer in root.findall(".//producer"):
+            producer_id = producer.get("id", "")
+            if producer_id.startswith("producer"):
+                try:
+                    producer_number = int(producer_id.replace("producer", ""))
+                    highest_producer_id = max(highest_producer_id, producer_number)
+                except ValueError:
+                    pass
 
-            except Exception as e:
-                messagebox.showerror("Error", f"An error occurred while adding pictures:\n{e}")
-                return
+        # Add a producer for each marker
+        for marker in self.markers:
+            # Extract the full picture path from the marker
+            picture_path = marker.get("Picture", "").strip()
+            if not picture_path:
+                print(f"Warning: Marker {marker.get('Number')} ('{marker.get('Name', 'Unnamed')}') does not have an associated picture path.")
+                continue
 
-        # Display the updated content in the Output Preview
-        self.load_output_preview(updated_content)
+            if not os.path.exists(picture_path):
+                print(f"Error: Picture path for Marker {marker.get('Number')} ('{marker.get('Name', 'Unnamed')}') does not exist: {picture_path}")
+                continue
+
+            highest_producer_id += 1  # Increment the producer ID
+            producer_id = f"producer{highest_producer_id}"
+
+            # Calculate the unique hash for this producer
+            marker_name = marker.get("Name", "unknown")
+            hash_input = f"{marker_name}_{datetime.utcnow().isoformat()}".encode("utf-8")
+            unique_hash = hashlib.md5(hash_input).hexdigest()  # Generate a 32-character hash
+
+            # Get the current datetime in the required format
+            creation_time = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")
+
+            # Create the producer element
+            producer = ET.Element("producer", id=producer_id)
+            ET.SubElement(producer, "property", name="length").text = "04:00:00.000"
+            ET.SubElement(producer, "property", name="eof").text = "pause"
+            ET.SubElement(producer, "property", name="resource").text = picture_path  # Use the full path
+            ET.SubElement(producer, "property", name="ttl").text = "1"
+            ET.SubElement(producer, "property", name="aspect_ratio").text = "1"
+            ET.SubElement(producer, "property", name="meta.media.progressive").text = "1"
+            ET.SubElement(producer, "property", name="seekable").text = "1"
+            ET.SubElement(producer, "property", name="format").text = "2"
+            ET.SubElement(producer, "property", name="meta.media.width").text = "1920"
+            ET.SubElement(producer, "property", name="meta.media.height").text = "1080"
+            ET.SubElement(producer, "property", name="mlt_service").text = "qimage"
+            ET.SubElement(producer, "property", name="creation_time").text = creation_time
+            ET.SubElement(producer, "property", name="shotcut:hash").text = unique_hash
+            ET.SubElement(producer, "property", name="shotcut:caption").text = os.path.basename(picture_path)
+
+            # Insert the producer element before the closing </mlt> tag
+            playlist = root.find(".//playlist[last()]")
+            if playlist is not None:
+                root.insert(list(root).index(playlist) + 1, producer)
+
+        # Serialize the updated XML back to a string
+        pretty_string = prettify_xml_with_no_extra_lines(root)
+
+        # Load the updated content into the Output Preview
+        self.load_output_preview(pretty_string)
 
 
+
+    def prettify_xml_with_no_extra_lines(element):
+        """Prettify XML while removing extra blank lines."""
+        rough_string = ET.tostring(element, encoding="unicode", method="xml")
+        parsed = minidom.parseString(rough_string)
+        return "\n".join([line for line in parsed.toprettyxml(indent="  ").splitlines() if line.strip()])
+    
     def add_buttons(self, left_frame, right_frame):
         """Add buttons under the textboxes."""
         # Button frame for the left side
@@ -187,7 +245,7 @@ class ExportManager:
 
         # Add buttons for the left side
         ttk.Button(left_button_frame, text="Add Transitions", bootstyle="primary", command=self.add_transitions).pack(side="left", expand=True, padx=5)
-        ttk.Button(left_button_frame, text="Add Pictures", bootstyle="secondary", command=self.add_pictures).pack(side="left", expand=True, padx=5)
+        ttk.Button(left_button_frame, text="Add Producer", bootstyle="secondary", command=self.add_producer).pack(side="left", expand=True, padx=5)
         ttk.Button(left_button_frame, text="Highlight Differences", bootstyle="info", command=self.highlight_differences).pack(side="left", expand=True, padx=5)
 
         # Button frame for the right side
@@ -242,7 +300,14 @@ class ExportManager:
             messagebox.showinfo("Export Successful", f"File successfully exported to:\n{export_file_path}")
         except Exception as e:
             messagebox.showerror("Export Error", f"Failed to export the file:\n{e}")
-
+            
+def prettify_xml_with_no_extra_lines(element):
+        """Prettify XML and remove unnecessary blank lines."""
+        rough_string = ET.tostring(element, encoding="utf-8")
+        pretty_string = minidom.parseString(rough_string).toprettyxml(indent="  ")
+        # Remove extra blank lines
+        lines = [line for line in pretty_string.splitlines() if line.strip()]
+        return "\n".join(lines)
 
 if __name__ == "__main__":
     # For testing purposes only
