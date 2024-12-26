@@ -124,25 +124,24 @@ class ExportManager:
 
     def add_playlists(self):
         """
-        Adds a playlist element to the output file based on the markers and producers.
+        Add a playlist for the markers to the .mlt file.
+        Only references producers that were added based on valid markers with pictures.
         """
         # Check if there's content in the output text box
         existing_output_content = self.output_mlt_text.get("1.0", tk.END).strip()
 
+        # Use existing content from the output text box if available; otherwise, use the .mlt file
         if existing_output_content:
-            # Use the existing content in the output preview as the base
             content = existing_output_content
         else:
-            # Otherwise, load content from the .mlt file
             mlt_file = self.config.get("shortcut", None)
             if not mlt_file or not os.path.exists(mlt_file):
                 print("Error: No valid .mlt file found in config.")
                 return
-
             with open(mlt_file, "r", encoding="utf-8") as file:
                 content = file.read()
 
-        # Parse the content as XML
+        # Parse the .mlt file as XML
         root = ET.fromstring(content)
 
         # Find the current highest playlist ID
@@ -156,66 +155,64 @@ class ExportManager:
                 except ValueError:
                     pass
 
-        # Determine the new playlist ID
-        new_playlist_id = f"playlist{highest_playlist_id + 1}"
+        # Increment for the new playlist ID
+        new_playlist_id = highest_playlist_id + 1
+        playlist_id = f"playlist{new_playlist_id}"
 
         # Create the playlist element
-        playlist = ET.Element("playlist", id=new_playlist_id)
+        playlist = ET.Element("playlist", id=playlist_id)
         ET.SubElement(playlist, "property", name="shotcut:video").text = "1"
-        ET.SubElement(playlist, "property", name="shotcut:name").text = f"V{highest_playlist_id + 1}"
+        ET.SubElement(playlist, "property", name="shotcut:name").text = f"V{new_playlist_id}"
 
-        # Sort markers by their start time
-        sorted_markers = sorted(self.markers, key=lambda x: x.get("StartTime", "00:00:00.000"))
+        # Track the previous marker time
+        previous_time = None
 
-        # Add blanks and entries based on markers
-        previous_time = "00:00:00.000"  # Start at the beginning of the timeline
-        out_duration = "00:00:00.483"  # Fixed out duration for each entry
-        for marker in sorted_markers:
-            marker_start_time = marker.get("StartTime", "00:00:00.000")
-            producer_id = f"producer{marker['Number']}"  # Assuming marker['Number'] corresponds to producer numbers
+        # Add entries to the playlist based on valid producers
+        for marker in self.markers:
+            producer_id = f"producer{marker['Number']}"
+            if not any(producer.get("id") == producer_id for producer in root.findall(".//producer")):
+                # Skip markers without a corresponding producer
+                print(f"Skipping marker '{marker['Name']}' as it has no valid producer.")
+                continue
 
-            # Calculate the blank length
-            blank_length = self.calculate_adjusted_duration(previous_time, marker_start_time, out_duration)
+            # Add a blank if there's a previous time
+            if previous_time:
+                blank_length = self.calculate_time_difference(previous_time, marker["StartTime"])
+                ET.SubElement(playlist, "blank", length=blank_length)
 
-            # Add a blank for the marker start time
-            ET.SubElement(playlist, "blank", length=blank_length)
+            # Add the entry for this marker
+            ET.SubElement(playlist, "entry", producer=producer_id, **{"in": "00:00:00.000", "out": "00:00:00.483"})
+            previous_time = marker["StartTime"]
 
-            # Add an entry for the producer
-            ET.SubElement(playlist, "entry", producer=producer_id, attrib={"in": "00:00:00.000", "out": out_duration})
-
-            # Update the previous_time to the current marker's start time
-            previous_time = marker_start_time
-
-        # Insert the new playlist after the last <playlist> and before <transition>
-        all_playlists = root.findall(".//playlist")
-        last_playlist = all_playlists[-1] if all_playlists else None
-
+        # Add the playlist to the XML
+        last_playlist = root.find(".//playlist[last()]")
         if last_playlist is not None:
-            index = list(root).index(last_playlist) + 1
-            root.insert(index, playlist)
-        else:
-            # If no playlists exist, add it at the root level
-            root.append(playlist)
-
-        # Add the new playlist to the <track> section
-        track_section = root.find(".//tractor")
-        if track_section is not None:
-            # Ensure the new track is added after the last <track> inside the <tractor>
-            all_tracks = track_section.findall("./track")
-            last_track = all_tracks[-1] if all_tracks else None
-
-            new_track = ET.Element("track", producer=new_playlist_id)
-            if last_track is not None:
-                index = list(track_section).index(last_track) + 1
-                track_section.insert(index, new_track)
-            else:
-                track_section.append(new_track)
+            root.insert(list(root).index(last_playlist) + 1, playlist)
 
         # Serialize the updated XML back to a string
         pretty_string = prettify_xml_with_no_extra_lines(root)
 
         # Load the updated content into the Output Preview
         self.load_output_preview(pretty_string)
+
+    def calculate_time_difference(self, start_time, end_time):
+        """
+        Calculate the difference between two times in the format HH:MM:SS.mmm.
+        Returns the difference as a formatted string.
+        """
+        from datetime import datetime
+
+        time_format = "%H:%M:%S.%f"
+        start = datetime.strptime(start_time, time_format)
+        end = datetime.strptime(end_time, time_format)
+        difference = end - start
+        total_seconds = int(difference.total_seconds())
+        milliseconds = int((difference.total_seconds() - total_seconds) * 1000)
+        hours, remainder = divmod(total_seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return f"{hours:02}:{minutes:02}:{seconds:02}.{milliseconds:03}"
+
+
 
     def calculate_adjusted_duration(self, start, end, out_duration):
         """
@@ -254,13 +251,13 @@ class ExportManager:
 
     def add_producer(self):
         """
-        Adds producer elements to the output file based on the markers.
+        Add producers to the .mlt file based on markers.
+        If a marker does not have a picture, it will be skipped with a warning.
         """
-        # Check if there's content in the output text box
+        # Check if the output preview has content; use it as the base if present
         existing_output_content = self.output_mlt_text.get("1.0", tk.END).strip()
 
         if existing_output_content:
-            # Use the existing content in the output preview as the base
             content = existing_output_content
         else:
             # Otherwise, load content from the .mlt file
@@ -272,7 +269,7 @@ class ExportManager:
             with open(mlt_file, "r", encoding="utf-8") as file:
                 content = file.read()
 
-        # Parse the content as XML
+        # Parse the .mlt file as XML
         root = ET.fromstring(content)
 
         # Find the current highest producer number
@@ -288,28 +285,29 @@ class ExportManager:
 
         # Add a producer for each marker
         for marker in self.markers:
+            marker_name = marker.get("Name", "unknown")
+            marker_picture = marker.get("Picture", None)
+
+            # Skip markers without pictures
+            if not marker_picture:
+                print(f"Warning: Marker '{marker_name}' has no picture assigned. Skipping.")
+                continue
+
             highest_producer_id += 1  # Increment the producer ID
             producer_id = f"producer{highest_producer_id}"
 
-            # Calculate the unique hash for this producer
-            marker_name = marker.get("Name", "unknown")
+            # Generate a unique hash
             hash_input = f"{marker_name}_{datetime.utcnow().isoformat()}".encode("utf-8")
-            unique_hash = hashlib.md5(hash_input).hexdigest()  # Generate a 32-character hash
+            unique_hash = hashlib.md5(hash_input).hexdigest()
 
             # Get the current datetime in the required format
             creation_time = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")
-
-            # Get the resource path
-            resource_path = marker.get("Picture", "")
-            if not resource_path:
-                print(f"Error: Marker '{marker_name}' has no picture assigned.")
-                return
 
             # Create the producer element
             producer = ET.Element("producer", id=producer_id, attrib={"in": "00:00:00.000", "out": "03:59:59.983"})
             ET.SubElement(producer, "property", name="length").text = "04:00:00.000"
             ET.SubElement(producer, "property", name="eof").text = "pause"
-            ET.SubElement(producer, "property", name="resource").text = resource_path.replace("\\", "/")
+            ET.SubElement(producer, "property", name="resource").text = marker_picture.replace("\\", "/")  # Ensure correct slashes
             ET.SubElement(producer, "property", name="ttl").text = "1"
             ET.SubElement(producer, "property", name="aspect_ratio").text = "1"
             ET.SubElement(producer, "property", name="meta.media.progressive").text = "1"
@@ -320,24 +318,26 @@ class ExportManager:
             ET.SubElement(producer, "property", name="mlt_service").text = "qimage"
             ET.SubElement(producer, "property", name="creation_time").text = creation_time
             ET.SubElement(producer, "property", name="shotcut:hash").text = unique_hash
-            ET.SubElement(producer, "property", name="shotcut:caption").text = os.path.basename(resource_path)
+            ET.SubElement(producer, "property", name="shotcut:caption").text = os.path.basename(marker_picture)
 
-            # Add the producer element before the last </playlist> or </mlt>
+            # Add the producer element before the last </mlt> or </playlist>
             playlist = root.find(".//playlist[last()]")
             if playlist is not None:
-                root.insert(list(root).index(playlist), producer)
+                root.insert(list(root).index(playlist) + 1, producer)
 
         # Serialize the updated XML back to a string
         pretty_string = prettify_xml_with_no_extra_lines(root)
 
         # Load the updated content into the Output Preview
         self.load_output_preview(pretty_string)
+ 
 
     def add_transitions(self):
         """
-        Add missing or necessary transitions to the output file, ensuring proper formatting.
+        Adds necessary transitions before the `</tractor>` tag, ensuring proper sequencing
+        and adding only missing transitions starting from the lowest available ID.
         """
-        # Load content from the output text box or original .mlt file
+        # Determine the base content (from output preview or original file)
         existing_output_content = self.output_mlt_text.get("1.0", tk.END).strip()
         if existing_output_content:
             content = existing_output_content
@@ -349,58 +349,64 @@ class ExportManager:
             with open(mlt_file, "r", encoding="utf-8") as file:
                 content = file.read()
 
-        # Parse the .mlt file as XML
-        root = ET.fromstring(content)
+        # Parse the XML content
+        try:
+            root = ET.fromstring(content)
+        except ET.ParseError as e:
+            print(f"Error parsing XML: {e}")
+            return
 
-        # Find all tracks
-        tracks = root.findall(".//track")
-        existing_transitions = root.findall(".//transition")
+        # Locate the tractor element
+        tractor = root.find(".//tractor")
+        if tractor is None:
+            print("No <tractor> element found in the XML.")
+            return
 
-        # Determine the highest transition ID
-        highest_transition_id = 0
-        for transition in existing_transitions:
-            transition_id = transition.get("id", "")
-            if transition_id.startswith("transition"):
-                try:
-                    transition_number = int(transition_id.replace("transition", ""))
-                    highest_transition_id = max(highest_transition_id, transition_number)
-                except ValueError:
-                    pass
+        # Extract existing transition IDs
+        existing_transition_ids = {
+            int(trans.get("id").replace("transition", ""))
+            for trans in tractor.findall("transition")
+            if trans.get("id", "").startswith("transition") and trans.get("id").replace("transition", "").isdigit()
+        }
 
-        # Create a set of existing (a_track, b_track) pairs to avoid duplicates
-        existing_pairs = set()
-        for transition in existing_transitions:
-            a_track = transition.find("./property[@name='a_track']")
-            b_track = transition.find("./property[@name='b_track']")
-            if a_track is not None and b_track is not None:
-                existing_pairs.add((a_track.text, b_track.text))
+        # Find the lowest available transition ID
+        next_transition_id = 1
+        while next_transition_id in existing_transition_ids:
+            next_transition_id += 1
 
-        # Add missing transitions
-        for i, track in enumerate(tracks):
-            for j, next_track in enumerate(tracks[i+1:], start=i+1):
-                # Check if this pair of tracks already has a transition
-                a_track = str(i)  # Current track index
-                b_track = str(j)  # Next track index
-                if (a_track, b_track) in existing_pairs:
-                    continue
+        # Define the necessary transitions
+        required_transitions = [
+            {"a_track": "0", "b_track": "4", "mlt_service": "mix", "always_active": "1", "sum": "1"},
+            {"a_track": "1", "b_track": "4", "mlt_service": "frei0r.cairoblend", "version": "0.1", "threads": "0", "disable": "0"},
+        ]
 
-                # Create a new transition
-                highest_transition_id += 1
-                transition = ET.Element("transition", id=f"transition{highest_transition_id}")
-                ET.SubElement(transition, "property", name="a_track").text = a_track
-                ET.SubElement(transition, "property", name="b_track").text = b_track
-                ET.SubElement(transition, "property", name="mlt_service").text = "mix"
-                ET.SubElement(transition, "property", name="always_active").text = "1"
-                ET.SubElement(transition, "property", name="sum").text = "1"
+        # Generate missing transitions
+        for transition in required_transitions:
+            # Check if a similar transition exists
+            transition_exists = any(
+                all(
+                    prop.get("name") == key and prop.text == value
+                    for key, value in transition.items()
+                    if key not in {"a_track", "b_track"}
+                )
+                for trans in tractor.findall("transition")
+                if trans.find("property[@name='a_track']") is not None and
+                trans.find("property[@name='b_track']") is not None and
+                trans.find("property[@name='a_track']").text == transition["a_track"] and
+                trans.find("property[@name='b_track']").text == transition["b_track"]
+            )
+            if not transition_exists:
+                # Add the new transition with the next available ID
+                new_transition_id = f"transition{next_transition_id}"
+                new_transition = ET.SubElement(tractor, "transition", id=new_transition_id)
+                for key, value in transition.items():
+                    ET.SubElement(new_transition, "property", name=key).text = value
+                next_transition_id += 1  # Increment the transition ID for the next one
 
-                # Add the transition to the root element
-                root.append(transition)
-
-        # Serialize the updated XML back to a string with proper formatting
-        updated_content = prettify_xml_with_no_extra_lines(root)
-
-        # Load the updated content into the Output Preview
-        self.load_output_preview(updated_content)
+        # Serialize back to string and load into the output preview
+        pretty_string = prettify_xml_with_no_extra_lines(root)
+        self.load_output_preview(pretty_string)
+        print(f"Transitions added successfully.")
 
 
 
