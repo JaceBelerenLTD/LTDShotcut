@@ -121,11 +121,11 @@ class ExportManager:
 
         # Add buttons under the text boxes
         self.add_buttons(left_frame, right_frame)
-
+        
     def add_playlists(self):
         """
-        Add a playlist for the markers to the .mlt file.
-        Only references producers that were added based on valid markers with pictures.
+        Add a playlist for the markers to the .mlt file, ensuring the playlist is added 
+        immediately after the producers.
         """
         # Check if there's content in the output text box
         existing_output_content = self.output_mlt_text.get("1.0", tk.END).strip()
@@ -189,11 +189,14 @@ class ExportManager:
         if last_playlist is not None:
             root.insert(list(root).index(last_playlist) + 1, playlist)
 
+
         # Serialize the updated XML back to a string
         pretty_string = prettify_xml_with_no_extra_lines(root)
 
         # Load the updated content into the Output Preview
         self.load_output_preview(pretty_string)
+
+
 
     def calculate_time_difference(self, start_time, end_time):
         """
