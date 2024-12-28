@@ -167,28 +167,46 @@ class ExportManager:
         # Track the previous marker time
         previous_time = None
 
-        # Add entries to the playlist based on valid producers
-        for marker in self.markers:
-            producer_id = f"producer{marker['Number']}"
-            if not any(producer.get("id") == producer_id for producer in root.findall(".//producer")):
-                # Skip markers without a corresponding producer
+        for idx, marker in enumerate(self.markers):
+            # Adjust producer ID based on index to start from producer0
+            producer_id = f"producer{idx}"  # Sequentially number producers starting from 0
+
+            # Verify if the corresponding producer exists in the XML
+            if not any(producer.get("id") == f"producer{idx}" for producer in root.findall(".//producer")):
+                # Skip markers without a valid producer in the XML
                 print(f"Skipping marker '{marker['Name']}' as it has no valid producer.")
                 continue
-
-            # Add a blank if there's a previous time
+            # If it's the first marker, calculate blank from start time to 0:00:00
+            if idx == 1 and marker["StartTime"]:
+                blank_length = self.calculate_time_difference("00:00:00.000", marker["StartTime"])
+                ET.SubElement(playlist, "blank", length=blank_length)
+            # Add a blank element if there was a previous marker
             if previous_time:
                 blank_length = self.calculate_time_difference(previous_time, marker["StartTime"])
                 ET.SubElement(playlist, "blank", length=blank_length)
 
             # Add the entry for this marker
+           # adjusted_producer_id = f"producer{int(producer_id.replace('producer', '')) - 1}"
             ET.SubElement(playlist, "entry", producer=producer_id, **{"in": "00:00:00.000", "out": "00:00:00.483"})
-            previous_time = marker["StartTime"]
 
+            previous_time = marker["StartTime"]
+            
         # Add the playlist to the XML
         last_playlist = root.find(".//playlist[last()]")
         if last_playlist is not None:
             root.insert(list(root).index(last_playlist) + 1, playlist)
 
+        # Add the corresponding track in the <tractor> element
+            tractor = root.find(".//tractor")
+            if tractor is not None:
+                # Insert the new track for the playlist after the last existing track
+                new_track = ET.Element("track", producer=playlist_id)
+                tracks = tractor.findall(".//track")
+                if tracks:
+                    tractor.insert(list(tractor).index(tracks[-1]) + 1, new_track)
+                else:
+                    # If no tracks are found, add it as the first child of <tractor>
+                    tractor.insert(0, new_track)
 
         # Serialize the updated XML back to a string
         pretty_string = prettify_xml_with_no_extra_lines(root)
@@ -389,6 +407,7 @@ class ExportManager:
             transition_exists = any(
                 all(
                     prop.get("name") == key and prop.text == value
+                    for prop in trans.findall("property")
                     for key, value in transition.items()
                     if key not in {"a_track", "b_track"}
                 )

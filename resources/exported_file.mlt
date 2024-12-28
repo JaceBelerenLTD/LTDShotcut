@@ -359,6 +359,7 @@
     <blank length="00:00:05.717"/>
     <entry producer="chain5" in="00:00:00.000" out="00:00:28.583"/>
   </playlist>
+ 
   <producer in="00:00:00.000" out="03:59:59.983" id="producer6">
     <property name="length">04:00:00.000</property>
     <property name="eof">pause</property>
@@ -371,8 +372,8 @@
     <property name="meta.media.width">1920</property>
     <property name="meta.media.height">1080</property>
     <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-26T18:26:38</property>
-    <property name="shotcut:hash">2ad77308868d2e3df7f04de5f3441ffc</property>
+    <property name="creation_time">2024-12-28T10:53:21</property>
+    <property name="shotcut:hash">a842e7069bc249bdbcc36aafc81c88c2</property>
     <property name="shotcut:caption">Grizzly.png</property>
   </producer>
   <producer in="00:00:00.000" out="03:59:59.983" id="producer5">
@@ -387,8 +388,8 @@
     <property name="meta.media.width">1920</property>
     <property name="meta.media.height">1080</property>
     <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-26T18:26:38</property>
-    <property name="shotcut:hash">d607e8f4286aa25509def75e65e45d7f</property>
+    <property name="creation_time">2024-12-28T10:53:21</property>
+    <property name="shotcut:hash">42b52574899d00ce885749f9b2e50a66</property>
     <property name="shotcut:caption">Troll.png</property>
   </producer>
   <producer in="00:00:00.000" out="03:59:59.983" id="producer4">
@@ -403,8 +404,8 @@
     <property name="meta.media.width">1920</property>
     <property name="meta.media.height">1080</property>
     <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-26T18:26:38</property>
-    <property name="shotcut:hash">a3076fcbfd704f583e83a51fc01937c4</property>
+    <property name="creation_time">2024-12-28T10:53:21</property>
+    <property name="shotcut:hash">758f0f7337cce7050fc6ef6b58dc8e0c</property>
     <property name="shotcut:caption">Harpy.png</property>
   </producer>
   <producer in="00:00:00.000" out="03:59:59.983" id="producer3">
@@ -419,8 +420,8 @@
     <property name="meta.media.width">1920</property>
     <property name="meta.media.height">1080</property>
     <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-26T18:26:38</property>
-    <property name="shotcut:hash">d89f8d3d6d1bb9566ffae2fe20be7005</property>
+    <property name="creation_time">2024-12-28T10:53:21</property>
+    <property name="shotcut:hash">c9c36d26c6cd980773eae33a001e43f6</property>
     <property name="shotcut:caption">gnoll.png</property>
   </producer>
   <producer in="00:00:00.000" out="03:59:59.983" id="producer2">
@@ -435,8 +436,8 @@
     <property name="meta.media.width">1920</property>
     <property name="meta.media.height">1080</property>
     <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-26T18:26:38</property>
-    <property name="shotcut:hash">3049ed634d6fa94529e25b3066a55958</property>
+    <property name="creation_time">2024-12-28T10:53:21</property>
+    <property name="shotcut:hash">c2e976780bf7475923ebd621eae1b14a</property>
     <property name="shotcut:caption">FW.png</property>
   </producer>
   <producer in="00:00:00.000" out="03:59:59.983" id="producer1">
@@ -451,23 +452,24 @@
     <property name="meta.media.width">1920</property>
     <property name="meta.media.height">1080</property>
     <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-26T18:26:38</property>
-    <property name="shotcut:hash">875496c2bea0161eb8afa32996948ca4</property>
+    <property name="creation_time">2024-12-28T10:53:21</property>
+    <property name="shotcut:hash">a1f4b98f38cc18accc4683e71c8d70d0</property>
     <property name="shotcut:caption">Tuskar.png</property>
   </producer>
-  <playlist id="playlist3">
+ <playlist id="playlist3">
     <property name="shotcut:video">1</property>
     <property name="shotcut:name">V3</property>
+    <blank length="00:00:04.117"/>
     <entry producer="producer1" in="00:00:00.000" out="00:00:00.483"/>
-    <blank length="00:00:03.399"/>
-    <entry producer="producer2" in="00:00:00.000" out="00:00:00.483"/>
     <blank length="00:00:03.766"/>
-    <entry producer="producer3" in="00:00:00.000" out="00:00:00.483"/>
+    <entry producer="producer2" in="00:00:00.000" out="00:00:00.483"/>
     <blank length="00:00:03.067"/>
-    <entry producer="producer4" in="00:00:00.000" out="00:00:00.483"/>
+    <entry producer="producer3" in="00:00:00.000" out="00:00:00.483"/>
     <blank length="00:00:02.166"/>
-    <entry producer="producer5" in="00:00:00.000" out="00:00:00.483"/>
+    <entry producer="producer4" in="00:00:00.000" out="00:00:00.483"/>
     <blank length="00:00:03.833"/>
+    <entry producer="producer5" in="00:00:00.000" out="00:00:00.483"/>
+    <blank length="00:00:03.899"/>
     <entry producer="producer6" in="00:00:00.000" out="00:00:00.483"/>
   </playlist>
   <tractor id="tractor2" title="Shotcut version 24.02.29" in="00:00:00.000" out="00:00:34.300">
@@ -542,6 +544,7 @@
     <track producer="playlist0"/>
     <track producer="playlist1" hide="video"/>
     <track producer="playlist2" hide="video"/>
+    <track producer="playlist3"/>
     <transition id="transition4">
       <property name="a_track">0</property>
       <property name="b_track">1</property>

@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" standalone="no"?>
 <mlt LC_NUMERIC="C" version="7.23.0" title="Shotcut version 24.02.29" producer="main_bin">
   <profile description="automatic" width="1920" height="1080" progressive="1" sample_aspect_num="1" sample_aspect_den="1" display_aspect_num="16" display_aspect_den="9" frame_rate_num="60" frame_rate_den="1" colorspace="709"/>
   <chain id="chain0" out="00:00:05.717">
@@ -359,88 +359,7 @@
     <blank length="00:00:05.717"/>
     <entry producer="chain5" in="00:00:00.000" out="00:00:28.583"/>
   </playlist>
- 
-  <producer in="00:00:00.000" out="03:59:59.983" id="producer6">
-    <property name="length">04:00:00.000</property>
-    <property name="eof">pause</property>
-    <property name="resource">C:/YouTube/LTD/assets/UNITSnew/Beast/5Grizzly/Grizzly.png</property>
-    <property name="ttl">1</property>
-    <property name="aspect_ratio">1</property>
-    <property name="meta.media.progressive">1</property>
-    <property name="seekable">1</property>
-    <property name="format">2</property>
-    <property name="meta.media.width">1920</property>
-    <property name="meta.media.height">1080</property>
-    <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-28T10:53:21</property>
-    <property name="shotcut:hash">a842e7069bc249bdbcc36aafc81c88c2</property>
-    <property name="shotcut:caption">Grizzly.png</property>
-  </producer>
-  <producer in="00:00:00.000" out="03:59:59.983" id="producer5">
-    <property name="length">04:00:00.000</property>
-    <property name="eof">pause</property>
-    <property name="resource">C:/YouTube/LTD/assets/UNITSnew/Beast/4Troll Figter/Troll.png</property>
-    <property name="ttl">1</property>
-    <property name="aspect_ratio">1</property>
-    <property name="meta.media.progressive">1</property>
-    <property name="seekable">1</property>
-    <property name="format">2</property>
-    <property name="meta.media.width">1920</property>
-    <property name="meta.media.height">1080</property>
-    <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-28T10:53:21</property>
-    <property name="shotcut:hash">42b52574899d00ce885749f9b2e50a66</property>
-    <property name="shotcut:caption">Troll.png</property>
-  </producer>
-  <producer in="00:00:00.000" out="03:59:59.983" id="producer4">
-    <property name="length">04:00:00.000</property>
-    <property name="eof">pause</property>
-    <property name="resource">C:/YouTube/LTD/assets/UNITSnew/Beast/3Harpy/Harpy.png</property>
-    <property name="ttl">1</property>
-    <property name="aspect_ratio">1</property>
-    <property name="meta.media.progressive">1</property>
-    <property name="seekable">1</property>
-    <property name="format">2</property>
-    <property name="meta.media.width">1920</property>
-    <property name="meta.media.height">1080</property>
-    <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-28T10:53:21</property>
-    <property name="shotcut:hash">758f0f7337cce7050fc6ef6b58dc8e0c</property>
-    <property name="shotcut:caption">Harpy.png</property>
-  </producer>
-  <producer in="00:00:00.000" out="03:59:59.983" id="producer3">
-    <property name="length">04:00:00.000</property>
-    <property name="eof">pause</property>
-    <property name="resource">C:/YouTube/LTD/assets/UNITSnew/Beast/1Gnoll Warrior/gnoll.png</property>
-    <property name="ttl">1</property>
-    <property name="aspect_ratio">1</property>
-    <property name="meta.media.progressive">1</property>
-    <property name="seekable">1</property>
-    <property name="format">2</property>
-    <property name="meta.media.width">1920</property>
-    <property name="meta.media.height">1080</property>
-    <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-28T10:53:21</property>
-    <property name="shotcut:hash">c9c36d26c6cd980773eae33a001e43f6</property>
-    <property name="shotcut:caption">gnoll.png</property>
-  </producer>
-  <producer in="00:00:00.000" out="03:59:59.983" id="producer2">
-    <property name="length">04:00:00.000</property>
-    <property name="eof">pause</property>
-    <property name="resource">C:/YouTube/LTD/assets/UNITSnew/Arctic/2FW/FW.png</property>
-    <property name="ttl">1</property>
-    <property name="aspect_ratio">1</property>
-    <property name="meta.media.progressive">1</property>
-    <property name="seekable">1</property>
-    <property name="format">2</property>
-    <property name="meta.media.width">1920</property>
-    <property name="meta.media.height">1080</property>
-    <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-28T10:53:21</property>
-    <property name="shotcut:hash">c2e976780bf7475923ebd621eae1b14a</property>
-    <property name="shotcut:caption">FW.png</property>
-  </producer>
-  <producer in="00:00:00.000" out="03:59:59.983" id="producer1">
+  <producer id="producer0" in="00:00:00.000" out="03:59:59.983">
     <property name="length">04:00:00.000</property>
     <property name="eof">pause</property>
     <property name="resource">C:/YouTube/LTD/assets/UNITSnew/Arctic/1Tuskar/Tuskar.png</property>
@@ -452,25 +371,105 @@
     <property name="meta.media.width">1920</property>
     <property name="meta.media.height">1080</property>
     <property name="mlt_service">qimage</property>
-    <property name="creation_time">2024-12-28T10:53:21</property>
-    <property name="shotcut:hash">a1f4b98f38cc18accc4683e71c8d70d0</property>
+    <property name="creation_time">2024-09-01T12:44:22</property>
+    <property name="shotcut:hash">4876eb781ef244373b6e80378efeb1a4</property>
     <property name="shotcut:caption">Tuskar.png</property>
   </producer>
- <playlist id="playlist3">
+  <producer id="producer1" in="00:00:00.000" out="03:59:59.983">
+    <property name="length">04:00:00.000</property>
+    <property name="eof">pause</property>
+    <property name="resource">C:/YouTube/LTD/assets/UNITSnew/Arctic/2FW/FW.png</property>
+    <property name="ttl">1</property>
+    <property name="aspect_ratio">1</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="seekable">1</property>
+    <property name="format">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="mlt_service">qimage</property>
+    <property name="creation_time">2024-09-01T12:55:32</property>
+    <property name="shotcut:hash">767bf33914d2ace8443bec02ec58c2d6</property>
+    <property name="shotcut:caption">FW.png</property>
+  </producer>
+  <producer id="producer2" in="00:00:00.000" out="03:59:59.983">
+    <property name="length">04:00:00.000</property>
+    <property name="eof">pause</property>
+    <property name="resource">C:/YouTube/LTD/assets/UNITSnew/Beast/1Gnoll Warrior/gnoll.png</property>
+    <property name="ttl">1</property>
+    <property name="aspect_ratio">1</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="seekable">1</property>
+    <property name="format">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="mlt_service">qimage</property>
+    <property name="creation_time">2024-08-30T14:32:04</property>
+    <property name="shotcut:hash">09764c05d2d093cac65ea14a220baf65</property>
+    <property name="shotcut:caption">gnoll.png</property>
+  </producer>
+  <producer id="producer3" in="00:00:00.000" out="03:59:59.983">
+    <property name="length">04:00:00.000</property>
+    <property name="eof">pause</property>
+    <property name="resource">C:/YouTube/LTD/assets/UNITSnew/Beast/3Harpy/Harpy.png</property>
+    <property name="ttl">1</property>
+    <property name="aspect_ratio">1</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="seekable">1</property>
+    <property name="format">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="mlt_service">qimage</property>
+    <property name="creation_time">2024-08-30T15:04:22</property>
+    <property name="shotcut:hash">65860d5555c9a31b250dea3284f58513</property>
+    <property name="shotcut:caption">Harpy.png</property>
+  </producer>
+  <producer id="producer4" in="00:00:00.000" out="03:59:59.983">
+    <property name="length">04:00:00.000</property>
+    <property name="eof">pause</property>
+    <property name="resource">C:/YouTube/LTD/assets/UNITSnew/Beast/4Troll Figter/Troll.png</property>
+    <property name="ttl">1</property>
+    <property name="aspect_ratio">1</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="seekable">1</property>
+    <property name="format">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="mlt_service">qimage</property>
+    <property name="creation_time">2024-08-30T15:25:31</property>
+    <property name="shotcut:hash">0b49105edd93e7330a1382406a50e4a3</property>
+    <property name="shotcut:caption">Troll.png</property>
+  </producer>
+  <producer id="producer5" in="00:00:00.000" out="03:59:59.983">
+    <property name="length">04:00:00.000</property>
+    <property name="eof">pause</property>
+    <property name="resource">C:/YouTube/LTD/assets/UNITSnew/Beast/5Grizzly/Grizzly.png</property>
+    <property name="ttl">1</property>
+    <property name="aspect_ratio">1</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="seekable">1</property>
+    <property name="format">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="mlt_service">qimage</property>
+    <property name="creation_time">2024-08-30T15:32:34</property>
+    <property name="shotcut:hash">e24563c86c6bf8f49231e5bf9b58194e</property>
+    <property name="shotcut:caption">Grizzly.png</property>
+  </producer>
+  <playlist id="playlist3">
     <property name="shotcut:video">1</property>
     <property name="shotcut:name">V2</property>
-    <blank length="00:00:04.117"/>
+    <blank length="00:00:00.717"/>
+    <entry producer="producer0" in="00:00:00.000" out="00:00:00.483"/>
+    <blank length="00:00:02.900"/>
     <entry producer="producer1" in="00:00:00.000" out="00:00:00.483"/>
-    <blank length="00:00:03.766"/>
+    <blank length="00:00:03.267"/>
     <entry producer="producer2" in="00:00:00.000" out="00:00:00.483"/>
-    <blank length="00:00:03.067"/>
+    <blank length="00:00:04.733"/>
     <entry producer="producer3" in="00:00:00.000" out="00:00:00.483"/>
-    <blank length="00:00:02.166"/>
+    <blank length="00:00:07.233"/>
     <entry producer="producer4" in="00:00:00.000" out="00:00:00.483"/>
-    <blank length="00:00:03.833"/>
+    <blank length="00:00:07.900"/>
     <entry producer="producer5" in="00:00:00.000" out="00:00:00.483"/>
-    <blank length="00:00:03.899"/>
-    <entry producer="producer6" in="00:00:00.000" out="00:00:00.483"/>
   </playlist>
   <tractor id="tractor2" title="Shotcut version 24.02.29" in="00:00:00.000" out="00:00:34.300">
     <property name="shotcut">1</property>
@@ -584,8 +583,8 @@
     <transition id="transition3">
       <property name="a_track">1</property>
       <property name="b_track">4</property>
-      <property name="mlt_service">frei0r.cairoblend</property>
       <property name="version">0.1</property>
+      <property name="mlt_service">frei0r.cairoblend</property>
       <property name="threads">0</property>
       <property name="disable">0</property>
     </transition>
