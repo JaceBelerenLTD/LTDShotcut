@@ -40,7 +40,7 @@ class MediaHandler:
         except Exception as e:
             print(f"An error occurred during processing: {e}")
             return None
-class MediaHandler:
+        
     def extract_markers_from_file(self, file_path):
         """
         Extracts markers from the provided .mlt file.
@@ -66,7 +66,7 @@ class MediaHandler:
             markers = []
             for index, marker_element in enumerate(markers_element.findall("properties")):
                 marker = {
-                    "Number": index + 1,
+                    "Number": index,
                     "Name": marker_element.find("property[@name='text']").text,
                     "StartTime": marker_element.find("property[@name='start']").text,
                     "EndTime": marker_element.find("property[@name='end']").text if marker_element.find("property[@name='end']") is not None else "",

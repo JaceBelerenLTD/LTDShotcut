@@ -167,34 +167,39 @@ class ExportManager:
         # Track the previous marker time
         previous_time = None
 
+        # Add Blank Space and Entry Produver to playlist
+        previous_end_time = "00:00:00.000"
+
         for idx, marker in enumerate(self.markers):
-            # Adjust producer ID based on index to start from producer0
             producer_id = f"producer{idx}"  # Sequentially number producers starting from 0
 
-            # Verify if the corresponding producer exists in the XML
-            if not any(producer.get("id") == f"producer{idx}" for producer in root.findall(".//producer")):
-                # Skip markers without a valid producer in the XML
-                print(f"Skipping marker '{marker['Name']}' as it has no valid producer.")
-                continue
-            # If it's the first marker, calculate blank from start time to 0:00:00
-            if idx == 1 and marker["StartTime"]:
-                blank_length = self.calculate_time_difference("00:00:00.000", marker["StartTime"])
-                ET.SubElement(playlist, "blank", length=blank_length)
-            # Add a blank element if there was a previous marker
-            if previous_time:
-                blank_length = self.calculate_time_difference(previous_time, marker["StartTime"])
-                ET.SubElement(playlist, "blank", length=blank_length)
+            # Calculate blank length and add to playlist
+            blank_length = calculate_blank_length(previous_end_time, marker["StartTime"])
+            ET.SubElement(playlist, "blank", length=blank_length)
 
-            # Add the entry for this marker
-           # adjusted_producer_id = f"producer{int(producer_id.replace('producer', '')) - 1}"
+            # Add the producer entry
             ET.SubElement(playlist, "entry", producer=producer_id, **{"in": "00:00:00.000", "out": "00:00:00.483"})
 
-            previous_time = marker["StartTime"]
+            # Update the previous_end_time for the next iteration
+            previous_end_time = calculate_end_time(marker["StartTime"], "00:00:00.483")
+
             
         # Add the playlist to the XML
-        last_playlist = root.find(".//playlist[last()]")
-        if last_playlist is not None:
-            root.insert(list(root).index(last_playlist) + 1, playlist)
+        # last_playlist = root.find(".//playlist[last()]")
+        # if last_playlist is not None:
+        #     root.insert(list(root).index(last_playlist) + 1, playlist)
+        
+        # Find the last <producer> and the <tractor> element
+        last_producer = root.find(".//producer[last()]")
+        tractor = root.find(".//tractor")
+
+        if last_producer is not None and tractor is not None:
+            # Insert the new playlist after the last producer and before the tractor
+            producer_index = list(root).index(last_producer)
+            root.insert(producer_index + 1, playlist)
+        else:
+            print("Error: Could not find <producer> or <tractor> to determine insertion point.")
+
 
         # Add the corresponding track in the <tractor> element
             tractor = root.find(".//tractor")
@@ -207,12 +212,68 @@ class ExportManager:
                 else:
                     # If no tracks are found, add it as the first child of <tractor>
                     tractor.insert(0, new_track)
+        # Find the <track producer="background"/> element
+        tracks_parent = root.find(".//track/..")  # Find the parent of the <track> elements
+        background_track = root.find(".//track[@producer='playlist2']")  # Find the background track
+
+        if tracks_parent is not None and background_track is not None:
+            # Create the new track element for the playlist
+            new_track = ET.Element("track", producer=playlist_id)
+
+            # Insert the new track after the background track
+            index = list(tracks_parent).index(background_track)
+            tracks_parent.insert(index + 1, new_track)
+        else:
+            print("Error: Could not find the <track> section or background track.")
+
 
         # Serialize the updated XML back to a string
         pretty_string = prettify_xml_with_no_extra_lines(root)
 
         # Load the updated content into the Output Preview
         self.load_output_preview(pretty_string)
+
+        from datetime import datetime, timedelta
+
+        def calculate_blank_length(previous_end_time, current_start_time):
+            """
+            Calculate the blank length between two time points.
+
+            Args:
+                previous_end_time (str): The end time of the previous entry in the format HH:MM:SS.mmm.
+                current_start_time (str): The start time of the current marker in the format HH:MM:SS.mmm.
+
+            Returns:
+                str: The blank length in the format HH:MM:SS.mmm.
+            """
+            fmt = "%H:%M:%S.%f"
+            previous = datetime.strptime(previous_end_time, fmt)
+            current = datetime.strptime(current_start_time, fmt)
+            difference = current - previous
+
+            if difference.total_seconds() < 0:
+                print("Warning: Negative blank length detected. Setting to 00:00:00.000.")
+                return "00:00:00.000"
+
+            return difference.strftime("%H:%M:%S.%f")[:-3]  # Trim to milliseconds
+
+
+        def calculate_end_time(start_time, duration="00:00:00.483"):
+            """
+            Calculate the end time based on the start time and duration.
+
+            Args:
+                start_time (str): The start time of the entry in the format HH:MM:SS.mmm.
+                duration (str): The duration of the entry in the format HH:MM:SS.mmm.
+
+            Returns:
+                str: The calculated end time in the format HH:MM:SS.mmm.
+            """
+            fmt = "%H:%M:%S.%f"
+            start = datetime.strptime(start_time, fmt)
+            duration_delta = datetime.strptime(duration, fmt) - datetime.strptime("00:00:00.000", fmt)
+            end_time = start + duration_delta
+            return end_time.strftime("%H:%M:%S.%f")[:-3]  # Trim to milliseconds
 
 
 
